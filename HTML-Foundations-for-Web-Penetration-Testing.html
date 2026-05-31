@@ -1,0 +1,3890 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Foundations — Prerequisites for Web Penetration Testing</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=JetBrains+Mono:wght@300;400;600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap");
+
+      :root {
+        --bg: #f5f0e8;
+        --surface: #eee8d8;
+        --card: #e8e0cc;
+        --border: #d0c8b0;
+        --dark: #1c1a14;
+        --ink: #2e2c22;
+        --muted: #7a7060;
+        --accent: #c0392b;
+        --accent2: #2471a3;
+        --accent3: #1e8449;
+        --gold: #b7860b;
+        --code-bg: #1c1a14;
+        --code-text: #e8dcc8;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 16px;
+        line-height: 1.85;
+        display: flex;
+      }
+
+      /* ─── SIDEBAR ─── */
+      #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        background: var(--dark);
+        overflow-y: auto;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+      }
+      #sidebar::-webkit-scrollbar {
+        width: 3px;
+      }
+      #sidebar::-webkit-scrollbar-thumb {
+        background: #3a3628;
+      }
+
+      .sb-header {
+        padding: 28px 22px 20px;
+        border-bottom: 1px solid #2e2c22;
+      }
+      .sb-badge {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        color: #7a7060;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .sb-title {
+        font-family: "Fraunces", serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #f0ead8;
+        line-height: 1.25;
+      }
+      .sb-sub {
+        font-size: 11px;
+        color: #7a7060;
+        margin-top: 6px;
+        font-style: italic;
+      }
+
+      .toc-group {
+        padding: 14px 0;
+        border-bottom: 1px solid #2a2820;
+      }
+      .toc-group:last-child {
+        border-bottom: none;
+      }
+      .toc-group-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        color: #5a5446;
+        text-transform: uppercase;
+        padding: 0 22px 8px;
+      }
+      .toc-link {
+        display: block;
+        padding: 5px 22px;
+        text-decoration: none;
+        font-size: 12.5px;
+        color: #9a8e78;
+        border-left: 2px solid transparent;
+        transition: all 0.15s;
+        line-height: 1.4;
+      }
+      .toc-link:hover,
+      .toc-link.active {
+        color: #f0ead8;
+        border-left-color: var(--accent);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .toc-link .n {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        color: #c0392b;
+        margin-right: 5px;
+      }
+      .toc-sub {
+        padding-left: 34px;
+        font-size: 11.5px;
+        color: #6a6050;
+      }
+
+      /* ─── MAIN ─── */
+      #main {
+        margin-left: 280px;
+        flex: 1;
+        max-width: 860px;
+      }
+
+      /* ─── COVER ─── */
+      #cover {
+        background: var(--dark);
+        color: #f0ead8;
+        padding: 80px 64px 72px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cover-vol {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .cover-vol::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(192, 57, 43, 0.4), transparent);
+      }
+      .cover-h1 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(38px, 6vw, 68px);
+        font-weight: 700;
+        line-height: 1.05;
+        color: #f5ede0;
+        margin-bottom: 6px;
+      }
+      .cover-h2 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(20px, 3vw, 32px);
+        font-weight: 300;
+        font-style: italic;
+        color: #9a8e78;
+        margin-bottom: 36px;
+      }
+      .cover-desc {
+        font-size: 16px;
+        color: #b0a490;
+        max-width: 520px;
+        line-height: 1.8;
+        font-weight: 300;
+        margin-bottom: 52px;
+      }
+      .cover-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .pill {
+        padding: 6px 16px;
+        border: 1px solid #3a3628;
+        border-radius: 100px;
+        font-size: 12px;
+        color: #9a8e78;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .pill.hi {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .cover-divider {
+        width: 48px;
+        height: 3px;
+        background: var(--accent);
+        margin: 44px 0 28px;
+      }
+      .cover-meta-row {
+        display: flex;
+        gap: 48px;
+        flex-wrap: wrap;
+      }
+      .cmeta {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .cmeta-l {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        color: #5a5446;
+        text-transform: uppercase;
+      }
+      .cmeta-v {
+        font-size: 14px;
+        color: #c8bca8;
+        font-weight: 500;
+      }
+
+      /* ─── CHAPTER ─── */
+      .chapter {
+        padding: 72px 64px 56px;
+        border-bottom: 1px solid var(--border);
+      }
+      .chapter:last-child {
+        border-bottom: none;
+      }
+
+      .ch-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .ch-tag::before {
+        content: "";
+        width: 24px;
+        height: 1px;
+        background: var(--accent);
+      }
+
+      h2.ch-title {
+        font-family: "Fraunces", serif;
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 700;
+        color: var(--dark);
+        line-height: 1.1;
+        margin-bottom: 18px;
+      }
+
+      .ch-intro {
+        font-size: 17px;
+        color: var(--muted);
+        border-left: 3px solid var(--border);
+        padding: 4px 0 4px 18px;
+        margin-bottom: 40px;
+        font-style: italic;
+        font-weight: 300;
+        max-width: 640px;
+      }
+
+      /* ─── HEADINGS ─── */
+      h3 {
+        font-family: "Fraunces", serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--dark);
+        margin: 44px 0 12px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--border);
+      }
+      h4 {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent2);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 28px 0 8px;
+      }
+
+      p {
+        margin-bottom: 16px;
+      }
+      strong {
+        color: var(--dark);
+        font-weight: 600;
+      }
+      em {
+        color: var(--gold);
+        font-style: italic;
+      }
+
+      ul,
+      ol {
+        margin: 10px 0 16px 26px;
+      }
+      li {
+        margin-bottom: 7px;
+        line-height: 1.7;
+      }
+      ul li::marker {
+        color: var(--accent);
+      }
+      ol li::marker {
+        color: var(--accent);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+      }
+
+      /* ─── CODE ─── */
+      code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.84em;
+        background: rgba(28, 26, 20, 0.08);
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 3px;
+        border: 1px solid var(--border);
+      }
+
+      pre {
+        background: var(--code-bg);
+        color: var(--code-text);
+        border-radius: 10px;
+        padding: 22px 26px;
+        overflow-x: auto;
+        margin: 18px 0 24px;
+        position: relative;
+        border: 1px solid #2a2820;
+        font-size: 13.5px;
+        line-height: 1.75;
+      }
+      pre::before {
+        content: attr(data-lang);
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        color: #4a4438;
+        text-transform: uppercase;
+      }
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: inherit;
+        color: var(--code-text);
+      }
+
+      /* Syntax */
+      .tag {
+        color: #7dd3fc;
+      }
+      .atr {
+        color: #86efac;
+      }
+      .val {
+        color: #fde68a;
+      }
+      .cmt {
+        color: #6b7688;
+        font-style: italic;
+      }
+      .kw {
+        color: #f9a8d4;
+      }
+      .str {
+        color: #fde68a;
+      }
+      .fn {
+        color: #86efac;
+      }
+      .var {
+        color: #7dd3fc;
+      }
+      .num {
+        color: #c4b5fd;
+      }
+      .hl {
+        color: #fbbf24;
+        font-weight: 600;
+      }
+      .muted-c {
+        color: #8a93a3;
+      }
+
+      /* ─── CALLOUTS ─── */
+      .callout {
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 20px 0;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        border-left: 4px solid;
+      }
+      .callout-content {
+        flex: 1;
+      }
+      .callout-content strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      .callout-content p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+      .callout.note {
+        background: rgba(36, 113, 163, 0.07);
+        border-color: var(--accent2);
+        color: #1a4a6e;
+      }
+      .callout.remember {
+        background: rgba(30, 132, 73, 0.07);
+        border-color: var(--accent3);
+        color: #145a32;
+      }
+      .callout.important {
+        background: rgba(192, 57, 43, 0.07);
+        border-color: var(--accent);
+        color: #7b241c;
+      }
+      .callout.exercise {
+        background: rgba(183, 134, 11, 0.07);
+        border-color: var(--gold);
+        color: #7d6608;
+      }
+
+      /* ─── TABLE ─── */
+      .tbl-wrap {
+        overflow-x: auto;
+        margin: 18px 0 22px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th {
+        background: var(--card);
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 11px 16px;
+        text-align: left;
+        border-bottom: 2px solid var(--border);
+      }
+      td {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      tr:hover td {
+        background: rgba(0, 0, 0, 0.02);
+      }
+      td code {
+        font-size: 12px;
+      }
+
+      /* ─── DIAGRAM BOX ─── */
+      .diagram {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px;
+        margin: 18px 0 24px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.8;
+        color: var(--ink);
+        overflow-x: auto;
+      }
+      .diagram .d-title {
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+      }
+      .d-box {
+        display: inline-block;
+        border: 1px solid var(--border);
+        padding: 3px 10px;
+        border-radius: 4px;
+        background: var(--bg);
+      }
+      .d-accent {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .d-blue {
+        color: var(--accent2);
+        font-weight: 600;
+      }
+      .d-green {
+        color: var(--accent3);
+        font-weight: 600;
+      }
+
+      /* ─── QUIZ BOX ─── */
+      .quiz {
+        background: var(--dark);
+        color: #f0ead8;
+        border-radius: 10px;
+        padding: 26px 28px;
+        margin: 28px 0;
+      }
+      .quiz-title {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .quiz ol {
+        color: #b0a490;
+      }
+      .quiz li {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      /* ─── PROGRESS BAR ─── */
+      #prog {
+        position: fixed;
+        top: 0;
+        left: 280px;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--gold));
+        z-index: 200;
+        transition: width 0.08s;
+        width: 0;
+      }
+
+      /* ─── BACK TO TOP ─── */
+      #btt {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        width: 42px;
+        height: 42px;
+        background: var(--dark);
+        border: none;
+        border-radius: 50%;
+        color: #f0ead8;
+        font-size: 16px;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #btt.vis {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* ─── SECTION DIVIDER ─── */
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 36px 0;
+      }
+
+      /* ─── ANATOMY VISUAL ─── */
+      .anatomy {
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 28px 28px 20px;
+        margin: 18px 0 24px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13.5px;
+        line-height: 1.7;
+        position: relative;
+        overflow-x: auto;
+      }
+      .anatomy-label {
+        font-size: 9px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #8a93a3;
+        margin-bottom: 16px;
+      }
+
+      @media (max-width: 860px) {
+        #sidebar {
+          transform: translateX(-280px);
+        }
+        #sidebar.open {
+          transform: translateX(0);
+        }
+        #main {
+          margin-left: 0;
+        }
+        .chapter {
+          padding: 48px 28px 40px;
+        }
+        #cover {
+          padding: 60px 28px;
+        }
+        #prog {
+          left: 0;
+        }
+        #mbtn {
+          display: flex;
+        }
+      }
+      #mbtn {
+        display: none;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 300;
+        background: var(--dark);
+        border: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        align-items: center;
+        justify-content: center;
+        color: #f0ead8;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="prog"></div>
+    <button
+      id="mbtn"
+      aria-label="Toggle table of contents"
+      onclick="document.getElementById('sidebar').classList.toggle('open')"
+    >
+      ☰
+    </button>
+
+
+    <!-- ══ SIDEBAR ══ -->
+    <nav id="sidebar">
+      <div class="sb-header">
+        <div class="sb-badge">Foundations Series</div>
+        <div class="sb-title">HTML for Web<br />Penetration Testing</div>
+        <div class="sb-sub">Prerequisites &amp; Fundamentals</div>
+      </div>
+
+      <div class="toc-group">
+        <div class="toc-group-label">Intro</div>
+        <a class="toc-link" href="#cover">Cover &amp; Preface</a>
+      </div>
+
+      <div class="toc-group">
+        <div class="toc-group-label">Part I — The Web</div>
+        <a class="toc-link" href="#ch1"
+          ><span class="n">01</span> What is HTML?</a
+        >
+        <a class="toc-link toc-sub" href="#ch1-history"
+          >History &amp; Versions</a
+        >
+        <a class="toc-link toc-sub" href="#ch1-how">How Browsers Use HTML</a>
+        <a class="toc-link" href="#ch2"
+          ><span class="n">02</span> How the Web Works</a
+        >
+        <a class="toc-link toc-sub" href="#ch2-http">HTTP &amp; Requests</a>
+        <a class="toc-link toc-sub" href="#ch2-urls">URLs &amp; Structure</a>
+      </div>
+
+      <div class="toc-group">
+        <div class="toc-group-label">Part II — HTML Core</div>
+        <a class="toc-link" href="#ch3"
+          ><span class="n">03</span> Document Structure</a
+        >
+        <a class="toc-link" href="#ch4"
+          ><span class="n">04</span> Elements &amp; Tags</a
+        >
+        <a class="toc-link toc-sub" href="#ch4-block">Block vs Inline</a>
+        <a class="toc-link toc-sub" href="#ch4-semantic">Semantic Elements</a>
+        <a class="toc-link" href="#ch5"><span class="n">05</span> Attributes</a>
+        <a class="toc-link toc-sub" href="#ch5-global">Global Attributes</a>
+        <a class="toc-link toc-sub" href="#ch5-events">Event Attributes</a>
+        <a class="toc-link" href="#ch6"
+          ><span class="n">06</span> Links &amp; Navigation</a
+        >
+        <a class="toc-link" href="#ch7"
+          ><span class="n">07</span> Images &amp; Media</a
+        >
+        <a class="toc-link" href="#ch8"><span class="n">08</span> Tables</a>
+        <a class="toc-link" href="#ch9"
+          ><span class="n">09</span> Forms &amp; Inputs</a
+        >
+        <a class="toc-link toc-sub" href="#ch9-types">Input Types</a>
+        <a class="toc-link toc-sub" href="#ch9-validation">Validation</a>
+        <a class="toc-link toc-sub" href="#ch9-hidden">Hidden Fields</a>
+      </div>
+
+      <div class="toc-group">
+        <div class="toc-group-label">Part III — Browser</div>
+        <a class="toc-link" href="#ch10"><span class="n">10</span> The DOM</a>
+        <a class="toc-link" href="#ch11"
+          ><span class="n">11</span> HTML &amp; CSS</a
+        >
+        <a class="toc-link" href="#ch12"
+          ><span class="n">12</span> HTML &amp; JavaScript</a
+        >
+        <a class="toc-link" href="#ch13"
+          ><span class="n">13</span> HTML5 Features</a
+        >
+      </div>
+
+      <div class="toc-group">
+        <div class="toc-group-label">Part IV — Pentest Prep</div>
+        <a class="toc-link" href="#ch14"
+          ><span class="n">14</span> Reading Source Code</a
+        >
+        <a class="toc-link" href="#ch15"
+          ><span class="n">15</span> Using DevTools</a
+        >
+        <a class="toc-link" href="#ch16"
+          ><span class="n">16</span> HTML &amp; HTTP Headers</a
+        >
+        <a class="toc-link" href="#appendix"
+          ><span class="n">A</span> Quick Reference</a
+        >
+        <a class="toc-link toc-sub" href="#next-steps">Where to Go Next</a>
+      </div>
+    </nav>
+
+    <!-- ══ MAIN ══ -->
+    <main id="main">
+      <!-- ══════════ COVER ══════════ -->
+      <section
+        id="cover"
+        class="chapter"
+        style="
+          background: var(--dark);
+          padding: 80px 64px 72px;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
+          border: none;
+        "
+      >
+        <div
+          aria-hidden="true"
+          style="
+            position: absolute;
+            bottom: -80px;
+            right: -40px;
+            font-family: &quot;Fraunces&quot;, serif;
+            font-size: 280px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.03);
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+          "
+        >
+          &lt;/&gt;
+        </div>
+
+        <div class="cover-vol">
+          Foundations Series · Volume I · © Khaled Farid
+        </div>
+        <div class="cover-h1">HTML Foundations</div>
+        <div class="cover-h2">Prerequisites for Web Penetration Testing</div>
+        <p class="cover-desc">
+          A complete, beginner-friendly guide to HTML — everything an aspiring
+          web penetration tester must understand before touching a single
+          security tool. Learn how web pages are built so you can later
+          understand how they break.
+        </p>
+
+        <div class="cover-pills">
+          <span class="pill hi">Beginner Friendly</span>
+          <span class="pill">No Prior HTML Knowledge Needed</span>
+          <span class="pill">16 Chapters</span>
+          <span class="pill">Hands-On Exercises</span>
+          <span class="pill">eJPT / OSCP Prep</span>
+        </div>
+
+        <div class="cover-divider"></div>
+        <div class="cover-meta-row">
+          <div class="cmeta">
+            <span class="cmeta-l">Level</span
+            ><span class="cmeta-v">Absolute Beginner</span>
+          </div>
+          <div class="cmeta">
+            <span class="cmeta-l">Chapters</span
+            ><span class="cmeta-v">16 + Appendix</span>
+          </div>
+          <div class="cmeta">
+            <span class="cmeta-l">Goal</span
+            ><span class="cmeta-v">Web Pentesting Readiness</span>
+          </div>
+          <div class="cmeta">
+            <span class="cmeta-l">Track</span
+            ><span class="cmeta-v">eJPT → OSCP → Bug Bounty</span>
+          </div>
+        </div>
+
+        <div
+          style="
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid #2a2820;
+          "
+        >
+          <p
+            style="
+              font-size: 14px;
+              color: #8a7f6c;
+              font-style: italic;
+              max-width: 560px;
+            "
+          >
+            "You cannot test what you do not understand. Before you learn how
+            web applications fail, you must first understand how they are built.
+            HTML is the foundation — and this book is where your journey
+            begins."
+          </p>
+        </div>
+      </section>
+
+      <!-- ══════════ PREFACE ══════════ -->
+      <section id="preface" class="chapter">
+        <div class="ch-tag">Preface</div>
+        <h2 class="ch-title">Why HTML Before Pentesting?</h2>
+        <p class="ch-intro">
+          Many beginners rush into learning attack tools without understanding
+          the target. This book closes that gap.
+        </p>
+
+        <p>
+          Web penetration testing is the practice of finding security weaknesses
+          in web applications. Every web application — from a simple blog to a
+          banking portal — is built on the same three foundational technologies:
+          <strong>HTML, CSS, and JavaScript</strong>. Of these three, HTML is
+          the bedrock. It defines the structure, the content, the forms, the
+          links, and the layout of everything the browser displays.
+        </p>
+
+        <p>
+          A penetration tester who doesn't understand HTML is like a locksmith
+          who doesn't know how locks work. You might be able to follow a
+          tutorial, but you'll be lost the moment something behaves unexpectedly
+          — and in real-world testing, unexpected behaviour is the rule, not the
+          exception.
+        </p>
+
+        <h3>What You Will Learn</h3>
+        <ul>
+          <li>How HTML documents are structured and parsed by browsers</li>
+          <li>Every major HTML element and what it does</li>
+          <li>How attributes, events, and values work</li>
+          <li>How forms collect and send data to servers</li>
+          <li>How links, URLs, and navigation work</li>
+          <li>What the DOM is and why it matters</li>
+          <li>How HTML, CSS, and JavaScript work together</li>
+          <li>How to read and analyse any web page's HTML source</li>
+          <li>How to use browser Developer Tools like a pentester</li>
+          <li>How HTML connects to HTTP headers and server communication</li>
+        </ul>
+
+        <div class="callout note">
+          <div style="font-size: 20px">📌</div>
+          <div class="callout-content">
+            <strong>This is NOT a hacking book</strong>
+            <p>
+              This book contains zero attack payloads. It is a pure foundations
+              book. The skills you build here are the prerequisites that make
+              the actual security topics — XSS, CSRF, injection, clickjacking —
+              make sense when you study them next.
+            </p>
+          </div>
+        </div>
+
+        <h3>How to Use This Book</h3>
+        <p>
+          Read each chapter in order. After each section, open a browser and a
+          text editor, and try the examples yourself. The best way to understand
+          HTML is to write it, break it, and observe what happens. Use browser
+          DevTools (F12) throughout — it is your window into how the browser
+          interprets your code.
+        </p>
+
+        <div class="callout exercise">
+          <div style="font-size: 20px">🛠️</div>
+          <div class="callout-content">
+            <strong>Setup: What You Need</strong>
+            <p>
+              A text editor (VS Code is recommended), any modern browser
+              (Firefox or Chrome), and that browser's DevTools (press F12). No
+              server, no database, no special software is needed for 90% of this
+              book. Just save a <code>.html</code> file and open it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 1 ══════════ -->
+      <section id="ch1" class="chapter">
+        <div class="ch-tag">Chapter 01</div>
+        <h2 class="ch-title">What is HTML?</h2>
+        <p class="ch-intro">
+          HTML — HyperText Markup Language — is the language browsers use to
+          understand and display web pages. It is not a programming language; it
+          is a markup (description) language.
+        </p>
+
+        <div id="ch1-history"></div>
+        <h3>1.1 A Brief History</h3>
+        <p>
+          HTML was invented by <strong>Tim Berners-Lee</strong> in 1991 as a way
+          to share scientific documents over the internet. The "HyperText" part
+          refers to links — text that connects documents together. The "Markup"
+          part means it uses tags to annotate text with meaning. The earliest
+          version had no version number and could not even display images — the
+          <code>&lt;img&gt;</code> element only arrived in 1993 with the Mosaic
+          browser.
+        </p>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Version</th>
+              <th>Year</th>
+              <th>Key Addition</th>
+            </tr>
+            <tr>
+              <td>HTML (first tags)</td>
+              <td>1991</td>
+              <td>Plain text and hyperlinks (no images yet)</td>
+            </tr>
+            <tr>
+              <td>HTML 2.0</td>
+              <td>1995</td>
+              <td>First formal standard (RFC 1866); forms introduced</td>
+            </tr>
+            <tr>
+              <td>HTML 3.2</td>
+              <td>1997</td>
+              <td>Tables, applets, text flow around images</td>
+            </tr>
+            <tr>
+              <td>HTML 4.01</td>
+              <td>1999</td>
+              <td>Scripting, stylesheet (CSS) linking, frames, accessibility</td>
+            </tr>
+            <tr>
+              <td>XHTML 1.0</td>
+              <td>2000</td>
+              <td>Stricter XML-based syntax</td>
+            </tr>
+            <tr>
+              <td><strong>HTML5</strong></td>
+              <td>2014 / living standard</td>
+              <td>
+                Audio, video, canvas, web storage, semantic elements, APIs —
+                the standard today
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <p>
+          Today we use <strong>HTML5</strong>. It is now maintained as a
+          "living standard" — meaning it is continuously updated rather than
+          released as numbered versions. It is governed by the
+          <abbr title="World Wide Web Consortium">W3C</abbr> and the WHATWG.
+          When you write HTML today, you are writing HTML5.
+        </p>
+
+        <div id="ch1-how"></div>
+        <h3>1.2 How Browsers Use HTML</h3>
+        <p>
+          When you visit a website, your browser performs a precise sequence of
+          steps:
+        </p>
+
+        <div class="diagram">
+          <div class="d-title">Browser Rendering Pipeline</div>
+          <div>
+            1. <span class="d-accent">Fetch</span> — Browser requests the HTML
+            file from the server via HTTP
+          </div>
+          <div>
+            2. <span class="d-blue">Parse</span> — Browser reads the HTML bytes
+            and builds the DOM tree
+          </div>
+          <div>
+            3. <span class="d-green">Style</span> — CSS is applied to DOM nodes
+            (CSSOM built)
+          </div>
+          <div>
+            4. <span class="d-accent">Layout</span> — Browser calculates the
+            position and size of every element
+          </div>
+          <div>
+            5. <span class="d-blue">Paint</span> — Pixels are drawn to the
+            screen
+          </div>
+          <div>
+            6. <span class="d-green">Composite</span> — Layers are combined into
+            the final visible page
+          </div>
+        </div>
+
+        <p>
+          As a pentester, you need to understand step
+          <strong>2 (Parse)</strong> deeply. The parsing rules define what is
+          valid, what is corrected silently, and what the browser ultimately
+          treats as instructions — even if it looks broken on the surface.
+        </p>
+
+        <div class="callout note">
+          <div style="font-size: 20px">💡</div>
+          <div class="callout-content">
+            <strong>Browsers are forgiving parsers</strong>
+            <p>
+              Unlike most programming languages that crash on errors, HTML
+              parsers are designed to recover gracefully from mistakes. A
+              missing closing tag, an unclosed quote, or malformed attributes —
+              the browser tries its best to render something useful. This
+              tolerance has significant security implications you'll understand
+              later in your studies.
+            </p>
+          </div>
+        </div>
+
+        <h3>1.3 HTML is Not a Programming Language</h3>
+        <p>
+          This distinction matters. HTML
+          <strong>describes content and structure</strong>. It does not have
+          loops, variables, or logic. That role belongs to JavaScript. Browsers
+          read HTML top to bottom and build a visual representation. They do not
+          "run" HTML — they render it.
+        </p>
+
+        <p>
+          Think of HTML as the <em>skeleton</em> of a web page, CSS as the
+          <em>skin and clothing</em>, and JavaScript as the
+          <em>muscles and nervous system</em>.
+        </p>
+      </section>
+
+      <!-- ══════════ CHAPTER 2 ══════════ -->
+      <section id="ch2" class="chapter">
+        <div class="ch-tag">Chapter 02</div>
+        <h2 class="ch-title">How the Web Works</h2>
+        <p class="ch-intro">
+          HTML doesn't exist in isolation. It is delivered over a network using
+          the HTTP protocol. Understanding this delivery mechanism is as
+          important as understanding the HTML itself.
+        </p>
+
+        <div id="ch2-http"></div>
+        <h3>2.1 The HTTP Request-Response Cycle</h3>
+        <p>
+          Every time your browser loads a web page, it performs an
+          <strong>HTTP transaction</strong>: a <em>request</em> goes out, a
+          <em>response</em> comes back. The HTML you study in this book is what
+          arrives in that response body.
+        </p>
+
+        <div class="diagram">
+          <div class="d-title">HTTP Transaction</div>
+          <pre
+            style="
+              background: none;
+              border: none;
+              padding: 0;
+              margin: 0;
+              font-size: 12.5px;
+              color: inherit;
+            "
+          >
+  [ Browser ]                              [ Web Server ]
+      |                                          |
+      |  GET /index.html HTTP/1.1                |
+      |  Host: example.com                       |
+      |  User-Agent: Mozilla/5.0 ...             |
+      | ────────────────────────────────────────>|
+      |                                          |
+      |  HTTP/1.1 200 OK                         |
+      |  Content-Type: text/html; charset=UTF-8  |
+      |  Content-Length: 1234                    |
+      |                                          |
+      |  &lt;!DOCTYPE html&gt;                         |
+      |  &lt;html&gt;...&lt;/html&gt;                        |
+      |&lt;─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─|
+    </pre
+          >
+        </div>
+
+        <h4>HTTP Methods</h4>
+        <p>
+          HTTP defines several <strong>methods</strong> (sometimes called
+          "verbs") for different types of requests. As a pentester, you'll work
+          with all of them:
+        </p>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Method</th>
+              <th>Meaning</th>
+              <th>Typical Use in HTML</th>
+            </tr>
+            <tr>
+              <td><code>GET</code></td>
+              <td>Retrieve a resource</td>
+              <td>
+                Loading a page; clicking a link;
+                <code>&lt;form method="get"&gt;</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>POST</code></td>
+              <td>Send data to server</td>
+              <td>Submitting a form; login; file upload</td>
+            </tr>
+            <tr>
+              <td><code>PUT</code></td>
+              <td>Replace a resource</td>
+              <td>REST APIs (not native HTML forms)</td>
+            </tr>
+            <tr>
+              <td><code>DELETE</code></td>
+              <td>Delete a resource</td>
+              <td>REST APIs (not native HTML forms)</td>
+            </tr>
+            <tr>
+              <td><code>HEAD</code></td>
+              <td>GET without body</td>
+              <td>Checking if a resource exists / its headers</td>
+            </tr>
+            <tr>
+              <td><code>OPTIONS</code></td>
+              <td>Describe allowed methods</td>
+              <td>CORS preflight requests</td>
+            </tr>
+            <tr>
+              <td><code>PATCH</code></td>
+              <td>Partially update a resource</td>
+              <td>REST APIs</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="callout note">
+          <div style="font-size: 20px">📌</div>
+          <div class="callout-content">
+            <strong>HTML forms only support GET and POST</strong>
+            <p>
+              Native HTML <code>&lt;form&gt;</code> elements can only use
+              <code>GET</code> or <code>POST</code>. Other HTTP methods (PUT,
+              DELETE, PATCH) are sent by JavaScript (the
+              <code>fetch()</code> API or <code>XMLHttpRequest</code>), not by
+              HTML forms directly.
+            </p>
+          </div>
+        </div>
+
+        <h4>HTTP Status Codes</h4>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Range</th>
+              <th>Category</th>
+              <th>Common Examples</th>
+            </tr>
+            <tr>
+              <td>1xx</td>
+              <td>Informational</td>
+              <td>100 Continue</td>
+            </tr>
+            <tr>
+              <td>2xx</td>
+              <td>Success</td>
+              <td>200 OK, 201 Created, 204 No Content</td>
+            </tr>
+            <tr>
+              <td>3xx</td>
+              <td>Redirection</td>
+              <td>301 Moved Permanently, 302 Found, 304 Not Modified</td>
+            </tr>
+            <tr>
+              <td>4xx</td>
+              <td>Client Error</td>
+              <td>
+                400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found
+              </td>
+            </tr>
+            <tr>
+              <td>5xx</td>
+              <td>Server Error</td>
+              <td>
+                500 Internal Server Error, 502 Bad Gateway, 503 Unavailable
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="ch2-urls"></div>
+        <h3>2.2 URLs — The Address of Everything</h3>
+        <p>
+          A <strong>URL</strong> (Uniform Resource Locator) is the complete
+          address of a resource on the web. Every link in HTML is a URL.
+          Understanding every component of a URL is essential for a pentester.
+        </p>
+
+        <div class="anatomy">
+          <div class="anatomy-label">URL Anatomy</div>
+          <pre
+            style="
+              background: none;
+              border: none;
+              padding: 0;
+              margin: 0;
+              font-size: 13px;
+              color: #e8dcc8;
+              line-height: 2.2;
+            "
+          >
+  <span class="kw">https</span>://<span class="tag">user:pass</span>@<span class="atr">shop.example.com</span>:<span class="num">8443</span><span class="fn">/products/shoes</span>?<span class="str">size=42&amp;color=red</span>#<span class="hl">reviews</span>
+
+  <span class="kw">https</span>     <span style="color:#8a93a3">→ Protocol (scheme) — how to connect</span>
+  <span class="tag">user:pass</span> <span style="color:#8a93a3">→ Credentials (rarely used — insecure)</span>
+  <span class="atr">shop.example.com</span> <span style="color:#8a93a3">→ Host (domain or IP address)</span>
+  <span class="num">8443</span>     <span style="color:#8a93a3">→ Port (default: 80 for http, 443 for https)</span>
+  <span class="fn">/products/shoes</span> <span style="color:#8a93a3">→ Path (resource location on server)</span>
+  <span class="str">size=42&amp;color=red</span> <span style="color:#8a93a3">→ Query string (key=value pairs, after ?)</span>
+  <span class="hl">reviews</span>  <span style="color:#8a93a3">→ Fragment (anchor, after # — never sent to server)</span>
+    </pre>
+        </div>
+
+        <div class="callout remember">
+          <div style="font-size: 20px">🧠</div>
+          <div class="callout-content">
+            <strong>The fragment (#) is never sent to the server</strong>
+            <p>
+              Everything after the <code>#</code> in a URL is handled entirely
+              by the browser. The server never sees it. This is a crucial fact
+              that you'll revisit when you study DOM-based vulnerabilities later
+              in your security career.
+            </p>
+          </div>
+        </div>
+
+        <h4>Absolute vs Relative URLs</h4>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Absolute URL — complete address --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://example.com/about"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Relative URL — relative to current page's domain --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"/about"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;</span>           <span class="cmt">&lt;!-- starts from domain root --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"about.html"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;</span>    <span class="cmt">&lt;!-- relative to current path --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"../contact"</span><span class="tag">&gt;</span>Contact<span class="tag">&lt;/a&gt;</span>  <span class="cmt">&lt;!-- one directory up --&gt;</span>
+
+<span class="cmt">&lt;!-- Protocol-relative URL — uses the page's current protocol --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"//example.com/about"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;</span></code></pre>
+      </section>
+
+
+      <!-- ══════════ CHAPTER 3 ══════════ -->
+      <section id="ch3" class="chapter">
+        <div class="ch-tag">Chapter 03</div>
+        <h2 class="ch-title">Document Structure</h2>
+        <p class="ch-intro">
+          Every valid HTML page follows the same skeleton. Understanding this
+          structure lets you instantly orient yourself when reading any web
+          page's source code.
+        </p>
+
+        <h3>3.1 The Minimal HTML Document</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;!DOCTYPE html&gt;</span>              <span class="cmt">&lt;!-- Declaration: tells browser this is HTML5 --&gt;</span>
+<span class="tag">&lt;html</span> <span class="atr">lang</span>=<span class="val">"en"</span><span class="tag">&gt;</span>             <span class="cmt">&lt;!-- Root element; lang declares the language --&gt;</span>
+
+  <span class="tag">&lt;head&gt;</span>                       <span class="cmt">&lt;!-- Metadata section — NOT displayed on page --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">/&gt;</span>   <span class="cmt">&lt;!-- Encoding — declare within the first 1024 bytes --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"viewport"</span> <span class="atr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;title&gt;</span>My Page Title<span class="tag">&lt;/title&gt;</span>  <span class="cmt">&lt;!-- Browser tab title --&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+
+  <span class="tag">&lt;body&gt;</span>                       <span class="cmt">&lt;!-- Visible content goes here --&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>Hello, World!<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>This is a paragraph.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+
+<span class="tag">&lt;/html&gt;</span></code></pre>
+
+        <h3>3.2 The &lt;head&gt; Element in Detail</h3>
+        <p>
+          The <code>&lt;head&gt;</code> section contains metadata — information
+          <em>about</em> the page, not the page's visible content. It is one of
+          the richest sources of information when you're reading a site's source
+          code.
+        </p>
+
+        <pre data-lang="html"><code><span class="tag">&lt;head&gt;</span>
+  <span class="cmt">&lt;!-- Character encoding — defines how text is decoded --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Page description (shown in search results) --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"description"</span> <span class="atr">content</span>=<span class="val">"Online shop for shoes"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Technology fingerprint — reveals the CMS or framework --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"generator"</span> <span class="atr">content</span>=<span class="val">"WordPress 6.4.1"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Page title --&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Shop | Home<span class="tag">&lt;/title&gt;</span>
+
+  <span class="cmt">&lt;!-- External stylesheet --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"/css/style.css"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Favicon (browser tab icon) --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"icon"</span> <span class="atr">href</span>=<span class="val">"/favicon.ico"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- JavaScript file — defer means it runs after HTML is parsed --&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"/js/app.js"</span> <span class="atr">defer</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+  <span class="cmt">&lt;!-- HTTP-equivalent meta — can trigger a redirect --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atr">http-equiv</span>=<span class="val">"refresh"</span> <span class="atr">content</span>=<span class="val">"5; url=/new-page"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/head&gt;</span></code></pre>
+
+        <div class="callout exercise">
+          <div style="font-size: 20px">🛠️</div>
+          <div class="callout-content">
+            <strong>Exercise 3.1</strong>
+            <p>
+              Open any website, press <code>Ctrl+U</code> (View Source). Find
+              the <code>&lt;head&gt;</code> section. What can you learn about
+              the site from it? Look for: framework/CMS hints, third-party
+              scripts loaded, charset, description, and any unusual meta tags.
+            </p>
+          </div>
+        </div>
+
+        <h3>3.3 The &lt;body&gt; Element</h3>
+        <p>
+          Everything inside <code>&lt;body&gt;</code> is what the user sees and
+          interacts with. The body can carry a handful of useful attributes:
+        </p>
+        <pre data-lang="html"><code><span class="tag">&lt;body</span>
+  <span class="atr">id</span>=<span class="val">"page-body"</span>
+  <span class="atr">class</span>=<span class="val">"logged-in admin-user"</span>   <span class="cmt">&lt;!-- CSS classes — may reveal user role --&gt;</span>
+  <span class="atr">data-user-id</span>=<span class="val">"1042"</span>            <span class="cmt">&lt;!-- Custom data attribute — may leak info --&gt;</span>
+<span class="tag">&gt;</span></code></pre>
+
+        <div class="callout note">
+          <div style="font-size: 20px">💡</div>
+          <div class="callout-content">
+            <strong>Class names on the body tag</strong>
+            <p>
+              Many web frameworks and CMS platforms (WordPress, Drupal, Django)
+              add CSS classes to the <code>&lt;body&gt;</code> tag that include
+              user role, page type, or feature flags. Reading these gives
+              immediate context about the page and the user's permission level.
+              You'll remember this during your first real reconnaissance
+              session.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 4 ══════════ -->
+      <section id="ch4" class="chapter">
+        <div class="ch-tag">Chapter 04</div>
+        <h2 class="ch-title">Elements &amp; Tags</h2>
+        <p class="ch-intro">
+          HTML is made of elements. Each element is defined by tags.
+          Understanding every major element — its purpose, its attributes, and
+          its behaviour — is the core HTML skill.
+        </p>
+
+        <h3>4.1 Anatomy of an HTML Element</h3>
+        <div class="anatomy">
+          <div class="anatomy-label">Element Anatomy</div>
+          <pre
+            style="
+              background: none;
+              border: none;
+              padding: 0;
+              margin: 0;
+              font-size: 14px;
+              color: #e8dcc8;
+              line-height: 2.5;
+            "
+          >
+  <span class="kw">&lt;</span><span class="tag">a</span>  <span class="atr">href</span><span class="muted-c">=</span><span class="val">"https://example.com"</span>  <span class="atr">target</span><span class="muted-c">=</span><span class="val">"_blank"</span><span class="kw">&gt;</span> Click Here <span class="kw">&lt;/</span><span class="tag">a</span><span class="kw">&gt;</span>
+
+  <span class="tag">a</span>          → Tag name (defines what this element is)
+  <span class="atr">href</span>       → Attribute name
+  <span class="val">"https://example.com"</span> → Attribute value
+  <span class="kw">&lt;a ...&gt;</span>    → Opening tag
+  Click Here → Content (text or nested elements)
+  <span class="kw">&lt;/a&gt;</span>       → Closing tag</pre>
+        </div>
+
+        <h4>Void Elements (Self-Closing)</h4>
+        <p>
+          Some elements have no content and no closing tag. They are called
+          <strong>void elements</strong>. (In HTML5 the trailing slash is
+          optional — <code>&lt;br&gt;</code> and <code>&lt;br/&gt;</code> are
+          equivalent.)
+        </p>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;br</span><span class="tag">/&gt;</span>              <span class="cmt">&lt;!-- line break --&gt;</span>
+<span class="tag">&lt;hr</span><span class="tag">/&gt;</span>              <span class="cmt">&lt;!-- horizontal rule --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"x.jpg"</span><span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- image --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span><span class="tag">/&gt;</span> <span class="cmt">&lt;!-- form input --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"style.css"</span><span class="tag">/&gt;</span></code></pre>
+
+        <div id="ch4-block"></div>
+        <h3>4.2 Block vs Inline Elements</h3>
+        <p>
+          HTML elements are traditionally classified as either
+          <strong>block-level</strong> or <strong>inline-level</strong>. This
+          determines how they flow on the page. (CSS can override the default
+          with the <code>display</code> property.)
+        </p>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Block-Level</th>
+              <th>Inline</th>
+            </tr>
+            <tr>
+              <td>Takes full width available, starts on a new line</td>
+              <td>Only as wide as content, flows within text</td>
+            </tr>
+            <tr>
+              <td>
+                <code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>,
+                <code>&lt;h1&gt;–&lt;h6&gt;</code>, <code>&lt;ul&gt;</code>,
+                <code>&lt;li&gt;</code>, <code>&lt;table&gt;</code>,
+                <code>&lt;form&gt;</code>, <code>&lt;header&gt;</code>,
+                <code>&lt;section&gt;</code>
+              </td>
+              <td>
+                <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>,
+                <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>,
+                <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code>,
+                <code>&lt;label&gt;</code>, <code>&lt;code&gt;</code>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>4.3 Heading Elements</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;h1&gt;</span>Main Page Title — usually one per page<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Major Section Heading<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span>Subsection Heading<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;h4&gt;</span>Sub-subsection<span class="tag">&lt;/h4&gt;</span>
+<span class="tag">&lt;h5&gt;</span>Less common<span class="tag">&lt;/h5&gt;</span>
+<span class="tag">&lt;h6&gt;</span>Least important heading<span class="tag">&lt;/h6&gt;</span></code></pre>
+
+        <h3>4.4 Text Formatting Elements</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;p&gt;</span>A paragraph of text.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;strong&gt;</span>Bold / important text<span class="tag">&lt;/strong&gt;</span>
+<span class="tag">&lt;em&gt;</span>Italicised / emphasized text<span class="tag">&lt;/em&gt;</span>
+<span class="tag">&lt;u&gt;</span>Underlined text<span class="tag">&lt;/u&gt;</span>
+<span class="tag">&lt;s&gt;</span>Strikethrough text<span class="tag">&lt;/s&gt;</span>
+<span class="tag">&lt;code&gt;</span>Inline code snippet<span class="tag">&lt;/code&gt;</span>
+<span class="tag">&lt;pre&gt;</span>Preserves whitespace and line breaks
+  exactly as written<span class="tag">&lt;/pre&gt;</span>
+<span class="tag">&lt;blockquote&gt;</span>A quoted block of text<span class="tag">&lt;/blockquote&gt;</span>
+<span class="tag">&lt;span&gt;</span>Generic inline container — used for styling<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;div&gt;</span>Generic block container — the most used element<span class="tag">&lt;/div&gt;</span></code></pre>
+
+        <h3>4.5 List Elements</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Unordered list (bullets) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>First item<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Second item<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cmt">&lt;!-- Ordered list (numbers) --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="atr">type</span>=<span class="val">"1"</span> <span class="atr">start</span>=<span class="val">"1"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;li&gt;</span>First<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Second<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="cmt">&lt;!-- Definition list --&gt;</span>
+<span class="tag">&lt;dl&gt;</span>
+  <span class="tag">&lt;dt&gt;</span>HTML<span class="tag">&lt;/dt&gt;</span>
+  <span class="tag">&lt;dd&gt;</span>HyperText Markup Language<span class="tag">&lt;/dd&gt;</span>
+<span class="tag">&lt;/dl&gt;</span></code></pre>
+
+        <div id="ch4-semantic"></div>
+        <h3>4.6 Semantic Elements (HTML5)</h3>
+        <p>
+          Semantic elements give meaning to the structure of a page. They tell
+          the browser (and anyone reading the source) what role each section
+          plays. You'll encounter these frequently when reading real application
+          source code.
+        </p>
+
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;header&gt;</span>  Top of page — logo, nav  <span class="tag">&lt;/header&gt;</span>
+<span class="tag">&lt;nav&gt;</span>     Navigation menu  <span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;main&gt;</span>    Main unique content  <span class="tag">&lt;/main&gt;</span>
+<span class="tag">&lt;section&gt;</span> Thematic grouping  <span class="tag">&lt;/section&gt;</span>
+<span class="tag">&lt;article&gt;</span> Self-contained content (blog post, comment)  <span class="tag">&lt;/article&gt;</span>
+<span class="tag">&lt;aside&gt;</span>   Sidebar / tangential content  <span class="tag">&lt;/aside&gt;</span>
+<span class="tag">&lt;footer&gt;</span>  Bottom of page — links, copyright  <span class="tag">&lt;/footer&gt;</span>
+<span class="tag">&lt;figure&gt;</span>  Image with caption  <span class="tag">&lt;/figure&gt;</span>
+<span class="tag">&lt;figcaption&gt;</span> Caption for a figure <span class="tag">&lt;/figcaption&gt;</span>
+<span class="tag">&lt;time&gt;</span>    Date or time value  <span class="tag">&lt;/time&gt;</span>
+<span class="tag">&lt;mark&gt;</span>    Highlighted text  <span class="tag">&lt;/mark&gt;</span></code></pre>
+      </section>
+
+      <!-- ══════════ CHAPTER 5 ══════════ -->
+      <section id="ch5" class="chapter">
+        <div class="ch-tag">Chapter 05</div>
+        <h2 class="ch-title">Attributes</h2>
+        <p class="ch-intro">
+          Attributes provide additional information about HTML elements. They
+          appear inside the opening tag and are written as name="value" pairs.
+          Attributes are where much of HTML's power — and its attack surface —
+          lives.
+        </p>
+
+        <h3>5.1 Attribute Syntax Rules</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Standard: attribute="value" --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"photo.jpg"</span> <span class="atr">alt</span>=<span class="val">"A photo"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Single quotes are valid too --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">'photo.jpg'</span> <span class="atr">alt</span>=<span class="val">'A photo'</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- No quotes (when value has no spaces) — valid but discouraged --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">photo.jpg</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Boolean attribute — presence alone means true --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span> <span class="atr">required</span> <span class="atr">disabled</span> <span class="atr">readonly</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Attribute names are case-insensitive (by spec) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">SRC</span>=<span class="val">"x.jpg"</span><span class="tag">/&gt;</span>   <span class="cmt">&lt;!-- valid --&gt;</span>
+<span class="tag">&lt;IMG</span> <span class="atr">SRC</span>=<span class="val">"x.jpg"</span><span class="tag">/&gt;</span>   <span class="cmt">&lt;!-- also valid --&gt;</span></code></pre>
+
+        <div id="ch5-global"></div>
+        <h3>5.2 Global Attributes</h3>
+        <p>These attributes can be used on <em>any</em> HTML element:</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Attribute</th>
+              <th>Purpose</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><code>id</code></td>
+              <td>Unique identifier within the page. Must be unique.</td>
+              <td><code>&lt;div id="login-form"&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>class</code></td>
+              <td>CSS class name(s) for styling. Multiple allowed.</td>
+              <td><code>&lt;p class="intro highlight"&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>style</code></td>
+              <td>Inline CSS styles directly on the element.</td>
+              <td><code>&lt;p style="color:red"&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>title</code></td>
+              <td>Tooltip text on hover.</td>
+              <td>
+                <code>&lt;abbr title="HyperText"&gt;HTML&lt;/abbr&gt;</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>lang</code></td>
+              <td>Language of the element's content.</td>
+              <td><code>&lt;p lang="ar"&gt;مرحبا&lt;/p&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>hidden</code></td>
+              <td>Hides the element from display.</td>
+              <td><code>&lt;div hidden&gt;secret&lt;/div&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>tabindex</code></td>
+              <td>Controls keyboard tab order.</td>
+              <td><code>&lt;a tabindex="1"&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>contenteditable</code></td>
+              <td>Makes the element's content editable by the user.</td>
+              <td><code>&lt;div contenteditable="true"&gt;</code></td>
+            </tr>
+            <tr>
+              <td><code>data-*</code></td>
+              <td>Custom data attributes — store any data.</td>
+              <td><code>&lt;div data-user-id="42"&gt;</code></td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="ch5-events"></div>
+        <h3>5.3 Event Attributes</h3>
+        <p>
+          Event attributes connect HTML elements to JavaScript code that runs
+          when something happens. They follow the pattern
+          <code>on + eventname</code>. Understanding these is fundamental — they
+          are how interactivity is wired into HTML.
+        </p>
+
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Mouse events --&gt;</span>
+<span class="tag">&lt;button</span> <span class="atr">onclick</span>=<span class="val">"handleClick()"</span><span class="tag">&gt;</span>Click Me<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">onmouseover</span>=<span class="val">"showTooltip()"</span> <span class="atr">onmouseout</span>=<span class="val">"hideTooltip()"</span><span class="tag">&gt;</span>Hover<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">ondblclick</span>=<span class="val">"editItem()"</span><span class="tag">&gt;</span>Double-click to edit<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- Keyboard events --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">onkeyup</span>=<span class="val">"search(this.value)"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">onkeydown</span>=<span class="val">"handleKey(event)"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Page/window events --&gt;</span>
+<span class="tag">&lt;body</span> <span class="atr">onload</span>=<span class="val">"init()"</span><span class="tag">&gt;</span>                  <span class="cmt">&lt;!-- runs when page finishes loading --&gt;</span>
+
+<span class="cmt">&lt;!-- Form events --&gt;</span>
+<span class="tag">&lt;form</span> <span class="atr">onsubmit</span>=<span class="val">"validateForm(event)"</span><span class="tag">&gt;</span>   <span class="cmt">&lt;!-- runs when form is submitted --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">onchange</span>=<span class="val">"recalculate()"</span><span class="tag">/&gt;</span>      <span class="cmt">&lt;!-- runs when value changes --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">onfocus</span>=<span class="val">"showHelp()"</span><span class="tag">/&gt;</span>          <span class="cmt">&lt;!-- runs when element gains focus --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">onblur</span>=<span class="val">"validateField()"</span><span class="tag">/&gt;</span>      <span class="cmt">&lt;!-- runs when element loses focus --&gt;</span>
+
+<span class="cmt">&lt;!-- Media events --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"photo.jpg"</span> <span class="atr">onload</span>=<span class="val">"imageLoaded()"</span> <span class="atr">onerror</span>=<span class="val">"showPlaceholder()"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;video</span> <span class="atr">onplay</span>=<span class="val">"trackPlay()"</span> <span class="atr">onended</span>=<span class="val">"showNext()"</span><span class="tag">&gt;&lt;/video&gt;</span></code></pre>
+
+        <div class="callout remember">
+          <div style="font-size: 20px">🧠</div>
+          <div class="callout-content">
+            <strong>Why event attributes matter to pentesters</strong>
+            <p>
+              Event attributes are the bridge between HTML and JavaScript
+              execution. Every element has dozens of potential event attributes.
+              When you study web security later, you'll understand that these
+              event hooks are how certain attacks work — injecting HTML that
+              fires JavaScript through these event channels. For now, just learn
+              what each event means and when it triggers.
+            </p>
+          </div>
+        </div>
+
+        <h3>5.4 data-* (Custom Data Attributes)</h3>
+        <p>
+          HTML5 introduced a way to store any custom data in an element using
+          <code>data-*</code> attributes. These are extremely common in modern
+          web applications and often reveal information about the application's
+          internal workings.
+        </p>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Developer stores application data in HTML --&gt;</span>
+<span class="tag">&lt;div</span>
+  <span class="atr">id</span>=<span class="val">"user-panel"</span>
+  <span class="atr">data-user-id</span>=<span class="val">"1042"</span>
+  <span class="atr">data-user-role</span>=<span class="val">"admin"</span>
+  <span class="atr">data-api-endpoint</span>=<span class="val">"https://api.internal.com/v2"</span>
+  <span class="atr">data-session-token</span>=<span class="val">"eyJhbGciOiJIUzI1NiIsInR5..."</span>
+<span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- JavaScript reads it via the dataset property: --&gt;</span>
+<span class="tag">&lt;script&gt;</span>
+  const div = document.getElementById('user-panel');
+  const userId = div.dataset.userId;        <span class="cmt">// "1042"  (data-user-id)</span>
+  const role   = div.dataset.userRole;      <span class="cmt">// "admin" (data-user-role)</span>
+<span class="tag">&lt;/script&gt;</span></code></pre>
+
+        <div class="callout note">
+          <div style="font-size: 20px">💡</div>
+          <div class="callout-content">
+            <strong>Hyphens become camelCase</strong>
+            <p>
+              In the <code>dataset</code> API, a hyphenated attribute like
+              <code>data-user-id</code> is read as <code>dataset.userId</code>.
+              Developers sometimes place sensitive values (tokens, roles,
+              internal endpoints) in these attributes — all of which are plainly
+              visible in the page source.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 6 ══════════ -->
+      <section id="ch6" class="chapter">
+        <div class="ch-tag">Chapter 06</div>
+        <h2 class="ch-title">Links &amp; Navigation</h2>
+        <p class="ch-intro">
+          The anchor element &lt;a&gt; is what makes the web a web — it creates
+          hyperlinks. Understanding every aspect of how links work is
+          foundational for pentesting.
+        </p>
+
+        <h3>6.1 The Anchor Element</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Basic link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://example.com"</span><span class="tag">&gt;</span>Visit Example<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Open in new tab (rel=noopener stops the new page controlling this one) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"https://example.com"</span> <span class="atr">target</span>=<span class="val">"_blank"</span> <span class="atr">rel</span>=<span class="val">"noopener noreferrer"</span><span class="tag">&gt;</span>New Tab<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Download link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"/report.pdf"</span> <span class="atr">download</span>=<span class="val">"my-report.pdf"</span><span class="tag">&gt;</span>Download Report<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Anchor link — jump to element with id="section2" --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"#section2"</span><span class="tag">&gt;</span>Jump to Section 2<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Email link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"mailto:admin@example.com"</span><span class="tag">&gt;</span>Email Us<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- Phone link --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"tel:+20123456789"</span><span class="tag">&gt;</span>Call Us<span class="tag">&lt;/a&gt;</span></code></pre>
+
+        <div class="callout note">
+          <div style="font-size: 20px">💡</div>
+          <div class="callout-content">
+            <strong>Why <code>rel="noopener"</code> on <code>target="_blank"</code></strong>
+            <p>
+              When a link opens a new tab, the new page historically received a
+              <code>window.opener</code> reference back to your page and could
+              redirect it somewhere malicious (a trick called
+              <em>reverse tabnabbing</em>). Modern browsers now apply
+              <code>noopener</code> automatically for <code>target="_blank"</code>,
+              but setting <code>rel="noopener noreferrer"</code> explicitly is
+              still best practice — and noticing its absence on links to
+              untrusted sites is something you'll do as a tester.
+            </p>
+          </div>
+        </div>
+
+        <h3>6.2 The target Attribute Values</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Value</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td><code>_self</code></td>
+              <td>Default. Opens in the same tab/window.</td>
+            </tr>
+            <tr>
+              <td><code>_blank</code></td>
+              <td>Opens in a new tab or window.</td>
+            </tr>
+            <tr>
+              <td><code>_parent</code></td>
+              <td>Opens in the parent frame (if inside an iframe).</td>
+            </tr>
+            <tr>
+              <td><code>_top</code></td>
+              <td>
+                Opens in the full browser window, breaking out of any frames.
+              </td>
+            </tr>
+            <tr>
+              <td><code>frameName</code></td>
+              <td>Opens in a specific named frame/iframe on the page.</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>6.3 The &lt;base&gt; Element</h3>
+        <p>
+          The <code>&lt;base&gt;</code> tag, placed in
+          <code>&lt;head&gt;</code>, sets the base URL for all relative links on
+          the page. Every relative URL is resolved from this base instead of the
+          page's actual URL.
+        </p>
+        <pre data-lang="html"><code><span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;base</span> <span class="atr">href</span>=<span class="val">"https://cdn.example.com/"</span> <span class="atr">target</span>=<span class="val">"_blank"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="cmt">&lt;!-- This will actually load: https://cdn.example.com/image.jpg --&gt;</span>
+  <span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"image.jpg"</span><span class="tag">/&gt;</span>
+  <span class="cmt">&lt;!-- This will go to: https://cdn.example.com/page --&gt;</span>
+  <span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"page"</span><span class="tag">&gt;</span>Page<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/body&gt;</span></code></pre>
+
+        <h3>6.4 The &lt;nav&gt; Element and Navigation Patterns</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;nav</span> <span class="atr">aria-label</span>=<span class="val">"Main Navigation"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;ul&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="atr">href</span>=<span class="val">"/"</span><span class="tag">&gt;</span>Home<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="atr">href</span>=<span class="val">"/about"</span><span class="tag">&gt;</span>About<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="atr">href</span>=<span class="val">"/products"</span><span class="tag">&gt;</span>Products<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="atr">href</span>=<span class="val">"/admin"</span> <span class="atr">class</span>=<span class="val">"admin-only"</span><span class="tag">&gt;</span>Admin<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/nav&gt;</span></code></pre>
+      </section>
+
+      <!-- ══════════ CHAPTER 7 ══════════ -->
+      <section id="ch7" class="chapter">
+        <div class="ch-tag">Chapter 07</div>
+        <h2 class="ch-title">Images &amp; Media</h2>
+        <p class="ch-intro">
+          HTML has rich support for embedding images, audio, and video. These
+          elements load resources from URLs — making them important to
+          understand for both functionality and resource analysis.
+        </p>
+
+        <h3>7.1 The &lt;img&gt; Element</h3>
+        <pre data-lang="html"><code><span class="tag">&lt;img</span>
+  <span class="atr">src</span>=<span class="val">"https://cdn.example.com/photo.jpg"</span>   <span class="cmt">&lt;!-- image URL --&gt;</span>
+  <span class="atr">alt</span>=<span class="val">"A descriptive text"</span>                   <span class="cmt">&lt;!-- shown if image fails / accessibility --&gt;</span>
+  <span class="atr">width</span>=<span class="val">"800"</span>                                 <span class="cmt">&lt;!-- width in pixels --&gt;</span>
+  <span class="atr">height</span>=<span class="val">"600"</span>                                <span class="cmt">&lt;!-- height in pixels --&gt;</span>
+  <span class="atr">loading</span>=<span class="val">"lazy"</span>                              <span class="cmt">&lt;!-- defer loading until near viewport --&gt;</span>
+  <span class="atr">onerror</span>=<span class="val">"this.src='/placeholder.jpg'"</span>       <span class="cmt">&lt;!-- fallback on load error --&gt;</span>
+<span class="tag">/&gt;</span></code></pre>
+
+        <h4>Image Sources</h4>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- External URL --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"https://other-site.com/image.jpg"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Local path --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"/images/logo.png"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Data URL (image embedded directly as Base64 text) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"data:image/png;base64,iVBORw0KGgo..."</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- SVG file (an SVG is XML and can contain &lt;script&gt;!) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="atr">src</span>=<span class="val">"/icons/logo.svg"</span><span class="tag">/&gt;</span></code></pre>
+
+        <h3>7.2 Audio and Video</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Audio element --&gt;</span>
+<span class="tag">&lt;audio</span> <span class="atr">controls</span> <span class="atr">loop</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="atr">src</span>=<span class="val">"sound.mp3"</span> <span class="atr">type</span>=<span class="val">"audio/mpeg"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;source</span> <span class="atr">src</span>=<span class="val">"sound.ogg"</span> <span class="atr">type</span>=<span class="val">"audio/ogg"</span><span class="tag">/&gt;</span>
+  Your browser does not support audio.  <span class="cmt">&lt;!-- fallback text --&gt;</span>
+<span class="tag">&lt;/audio&gt;</span>
+
+<span class="cmt">&lt;!-- Video element --&gt;</span>
+<span class="tag">&lt;video</span>
+  <span class="atr">src</span>=<span class="val">"clip.mp4"</span>
+  <span class="atr">controls</span>
+  <span class="atr">width</span>=<span class="val">"640"</span>
+  <span class="atr">height</span>=<span class="val">"360"</span>
+  <span class="atr">poster</span>=<span class="val">"thumbnail.jpg"</span>   <span class="cmt">&lt;!-- shown before video plays --&gt;</span>
+  <span class="atr">muted</span>                     <span class="cmt">&lt;!-- muted (browsers require this for autoplay) --&gt;</span>
+<span class="tag">&gt;</span>
+<span class="tag">&lt;/video&gt;</span></code></pre>
+
+        <h3>7.3 The &lt;iframe&gt; Element</h3>
+        <p>
+          An iframe embeds another HTML page <em>inside</em> the current page.
+          It creates an isolated browsing context. This is one of the most
+          important elements for a pentester to understand.
+        </p>
+
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Embed another page inside this one --&gt;</span>
+<span class="tag">&lt;iframe</span>
+  <span class="atr">src</span>=<span class="val">"https://maps.google.com/embed?..."</span>
+  <span class="atr">width</span>=<span class="val">"600"</span>
+  <span class="atr">height</span>=<span class="val">"450"</span>
+  <span class="atr">title</span>=<span class="val">"Google Map"</span>
+  <span class="atr">sandbox</span>=<span class="val">"allow-scripts allow-same-origin"</span>  <span class="cmt">&lt;!-- security restrictions --&gt;</span>
+  <span class="atr">loading</span>=<span class="val">"lazy"</span>
+<span class="tag">&gt;&lt;/iframe&gt;</span>
+
+<span class="cmt">&lt;!-- Embed HTML content directly --&gt;</span>
+<span class="tag">&lt;iframe</span> <span class="atr">srcdoc</span>=<span class="val">"&lt;p&gt;Inline HTML content&lt;/p&gt;"</span><span class="tag">&gt;&lt;/iframe&gt;</span></code></pre>
+
+        <div class="callout note">
+          <div style="font-size: 20px">💡</div>
+          <div class="callout-content">
+            <strong>The sandbox attribute</strong>
+            <p>
+              The <code>sandbox</code> attribute restricts what an iframe is
+              allowed to do. Without it, an embedded page can do anything a
+              normal page can. With <code>sandbox</code>, capabilities are
+              switched off unless explicitly re-granted using tokens like
+              <code>allow-scripts</code>, <code>allow-forms</code>,
+              <code>allow-popups</code>, and <code>allow-same-origin</code>. Note
+              one important catch: granting both <code>allow-scripts</code> and
+              <code>allow-same-origin</code> together lets the framed page reach
+              back and remove its own sandbox — so that combination largely
+              defeats the protection for untrusted content.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 8 ══════════ -->
+      <section id="ch8" class="chapter">
+        <div class="ch-tag">Chapter 08</div>
+        <h2 class="ch-title">Tables</h2>
+        <p class="ch-intro">
+          HTML tables display structured, tabular data in rows and columns. They
+          appear throughout web applications — in admin panels, data exports,
+          reports, and API responses.
+        </p>
+
+        <h3>8.1 Complete Table Structure</h3>
+        <pre data-lang="html"><code><span class="tag">&lt;table&gt;</span>
+
+  <span class="cmt">&lt;!-- Caption (title for the table) --&gt;</span>
+  <span class="tag">&lt;caption&gt;</span>User Accounts<span class="tag">&lt;/caption&gt;</span>
+
+  <span class="cmt">&lt;!-- Table Head --&gt;</span>
+  <span class="tag">&lt;thead&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>                              <span class="cmt">&lt;!-- Table Row --&gt;</span>
+      <span class="tag">&lt;th</span> <span class="atr">scope</span>=<span class="val">"col"</span><span class="tag">&gt;</span>ID<span class="tag">&lt;/th&gt;</span>         <span class="cmt">&lt;!-- Table Header cell --&gt;</span>
+      <span class="tag">&lt;th</span> <span class="atr">scope</span>=<span class="val">"col"</span><span class="tag">&gt;</span>Username<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th</span> <span class="atr">scope</span>=<span class="val">"col"</span><span class="tag">&gt;</span>Email<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th</span> <span class="atr">scope</span>=<span class="val">"col"</span><span class="tag">&gt;</span>Role<span class="tag">&lt;/th&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/thead&gt;</span>
+
+  <span class="cmt">&lt;!-- Table Body --&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>1<span class="tag">&lt;/td&gt;</span>                      <span class="cmt">&lt;!-- Table Data cell --&gt;</span>
+      <span class="tag">&lt;td&gt;</span>alice<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>alice@example.com<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>admin<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>2<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>bob<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>bob@example.com<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>user<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tbody&gt;</span>
+
+  <span class="cmt">&lt;!-- Table Footer --&gt;</span>
+  <span class="tag">&lt;tfoot&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td</span> <span class="atr">colspan</span>=<span class="val">"4"</span><span class="tag">&gt;</span>Total: 2 users<span class="tag">&lt;/td&gt;</span>   <span class="cmt">&lt;!-- spans 4 columns --&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tfoot&gt;</span>
+
+<span class="tag">&lt;/table&gt;</span></code></pre>
+
+        <h4>colspan and rowspan</h4>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;td</span> <span class="atr">colspan</span>=<span class="val">"3"</span><span class="tag">&gt;</span>Spans 3 columns<span class="tag">&lt;/td&gt;</span>
+<span class="tag">&lt;td</span> <span class="atr">rowspan</span>=<span class="val">"2"</span><span class="tag">&gt;</span>Spans 2 rows<span class="tag">&lt;/td&gt;</span></code></pre>
+      </section>
+
+      <!-- ══════════ CHAPTER 9 ══════════ -->
+      <section id="ch9" class="chapter">
+        <div class="ch-tag">Chapter 09</div>
+        <h2 class="ch-title">
+          Forms &amp; Inputs — The Most Important Chapter
+        </h2>
+        <p class="ch-intro">
+          HTML forms are how users send data to servers. They are the primary
+          interaction mechanism of web applications — and the primary target of
+          web penetration testing. Master this chapter completely.
+        </p>
+
+        <h3>9.1 The Form Element</h3>
+        <pre data-lang="html"><code><span class="tag">&lt;form</span>
+  <span class="atr">action</span>=<span class="val">"/api/login"</span>         <span class="cmt">&lt;!-- WHERE to send the data (URL) --&gt;</span>
+  <span class="atr">method</span>=<span class="val">"POST"</span>               <span class="cmt">&lt;!-- HOW to send it: GET or POST --&gt;</span>
+  <span class="atr">enctype</span>=<span class="val">"application/x-www-form-urlencoded"</span>  <span class="cmt">&lt;!-- body encoding --&gt;</span>
+  <span class="atr">name</span>=<span class="val">"loginForm"</span>
+  <span class="atr">id</span>=<span class="val">"login-form"</span>
+  <span class="atr">autocomplete</span>=<span class="val">"off"</span>          <span class="cmt">&lt;!-- hint to disable browser autofill --&gt;</span>
+<span class="tag">&gt;</span>
+  ...form fields...
+<span class="tag">&lt;/form&gt;</span></code></pre>
+
+        <h4>GET vs POST — Understanding the Difference</h4>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Aspect</th>
+              <th>GET</th>
+              <th>POST</th>
+            </tr>
+            <tr>
+              <td>Data location</td>
+              <td>
+                Appended to URL as query string: <code>/search?q=term</code>
+              </td>
+              <td>In the request body — not in the URL</td>
+            </tr>
+            <tr>
+              <td>Visibility</td>
+              <td>
+                Visible in the address bar, server logs, and browser history
+              </td>
+              <td>Not in URL — but not encrypted unless HTTPS is used</td>
+            </tr>
+            <tr>
+              <td>Bookmarkable</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>Size limit</td>
+              <td>URL length limit (~2,000+ chars; browser/server dependent)</td>
+              <td>No practical limit</td>
+            </tr>
+            <tr>
+              <td>Appropriate for</td>
+              <td>Read operations — searching, filtering</td>
+              <td>Write operations — login, register, submit</td>
+            </tr>
+            <tr>
+              <td>Idempotent?</td>
+              <td>Yes (repeating the same request = same result)</td>
+              <td>No (submitting an order twice = two orders)</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>The Three enctype Values</h4>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>enctype Value</th>
+              <th>Body Format</th>
+              <th>When to Use</th>
+            </tr>
+            <tr>
+              <td><code>application/x-www-form-urlencoded</code></td>
+              <td><code>username=alice&amp;password=secret</code></td>
+              <td>Default for all text-based forms</td>
+            </tr>
+            <tr>
+              <td><code>multipart/form-data</code></td>
+              <td>Multipart MIME with boundaries</td>
+              <td>Required when uploading files</td>
+            </tr>
+            <tr>
+              <td><code>text/plain</code></td>
+              <td>Raw text, newline-separated pairs</td>
+              <td>Rarely used in practice</td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="ch9-types"></div>
+        <h3>9.2 Input Types — Complete Reference</h3>
+        <p>
+          The <code>&lt;input&gt;</code> element is polymorphic — its behaviour
+          is entirely determined by its <code>type</code> attribute. Each type
+          renders differently and sends data differently.
+        </p>
+
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- TEXT INPUTS --------------------------------&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span>     <span class="atr">name</span>=<span class="val">"username"</span> <span class="atr">placeholder</span>=<span class="val">"Enter username"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"password"</span> <span class="atr">name</span>=<span class="val">"password"</span><span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- masked characters --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"email"</span>    <span class="atr">name</span>=<span class="val">"email"</span>   <span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- validates email format --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"tel"</span>      <span class="atr">name</span>=<span class="val">"phone"</span>   <span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- phone keyboard on mobile --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"url"</span>      <span class="atr">name</span>=<span class="val">"website"</span> <span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- validates URL format --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"search"</span>   <span class="atr">name</span>=<span class="val">"q"</span>       <span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- search-styled text box --&gt;</span>
+<span class="tag">&lt;textarea</span> <span class="atr">name</span>=<span class="val">"message"</span> <span class="atr">rows</span>=<span class="val">"5"</span><span class="tag">&gt;&lt;/textarea&gt;</span>  <span class="cmt">&lt;!-- multi-line text --&gt;</span>
+
+<span class="cmt">&lt;!-- NUMBER &amp; RANGE ------------------------------&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"number"</span>  <span class="atr">name</span>=<span class="val">"qty"</span>   <span class="atr">min</span>=<span class="val">"1"</span> <span class="atr">max</span>=<span class="val">"100"</span> <span class="atr">step</span>=<span class="val">"1"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"range"</span>   <span class="atr">name</span>=<span class="val">"score"</span> <span class="atr">min</span>=<span class="val">"0"</span> <span class="atr">max</span>=<span class="val">"10"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- DATE &amp; TIME ---------------------------------&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"date"</span>           <span class="atr">name</span>=<span class="val">"dob"</span><span class="tag">/&gt;</span>       <span class="cmt">&lt;!-- YYYY-MM-DD --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"time"</span>           <span class="atr">name</span>=<span class="val">"appt"</span><span class="tag">/&gt;</span>      <span class="cmt">&lt;!-- HH:MM --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"datetime-local"</span> <span class="atr">name</span>=<span class="val">"meeting"</span><span class="tag">/&gt;</span>   <span class="cmt">&lt;!-- combined --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"month"</span>          <span class="atr">name</span>=<span class="val">"billing"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- SELECTION -----------------------------------&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"checkbox"</span> <span class="atr">name</span>=<span class="val">"agree"</span> <span class="atr">value</span>=<span class="val">"yes"</span><span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- multi-select --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"radio"</span>    <span class="atr">name</span>=<span class="val">"plan"</span>  <span class="atr">value</span>=<span class="val">"basic"</span><span class="tag">/&gt;</span> <span class="cmt">&lt;!-- single-select per group --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"radio"</span>    <span class="atr">name</span>=<span class="val">"plan"</span>  <span class="atr">value</span>=<span class="val">"pro"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- FILE &amp; COLOUR -------------------------------&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"file"</span>   <span class="atr">name</span>=<span class="val">"upload"</span> <span class="atr">accept</span>=<span class="val">".jpg,.png"</span> <span class="atr">multiple</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"color"</span>  <span class="atr">name</span>=<span class="val">"theme"</span>  <span class="atr">value</span>=<span class="val">"#ff0000"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- BUTTONS --------------------------------------&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"submit"</span>  <span class="atr">value</span>=<span class="val">"Send Form"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"reset"</span>   <span class="atr">value</span>=<span class="val">"Reset"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"button"</span>  <span class="atr">value</span>=<span class="val">"Click"</span> <span class="atr">onclick</span>=<span class="val">"doSomething()"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"image"</span>   <span class="atr">src</span>=<span class="val">"btn.png"</span> <span class="atr">alt</span>=<span class="val">"Submit"</span><span class="tag">/&gt;</span>  <span class="cmt">&lt;!-- image submit button --&gt;</span></code></pre>
+
+        <h3>9.3 The &lt;select&gt; Dropdown</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;select</span> <span class="atr">name</span>=<span class="val">"country"</span> <span class="atr">id</span>=<span class="val">"country"</span> <span class="atr">required</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">""</span><span class="tag">&gt;</span>-- Select Country --<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;optgroup</span> <span class="atr">label</span>=<span class="val">"Middle East"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"eg"</span> <span class="atr">selected</span><span class="tag">&gt;</span>Egypt<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"sa"</span><span class="tag">&gt;</span>Saudi Arabia<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/optgroup&gt;</span>
+  <span class="tag">&lt;optgroup</span> <span class="atr">label</span>=<span class="val">"Europe"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"de"</span><span class="tag">&gt;</span>Germany<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/optgroup&gt;</span>
+<span class="tag">&lt;/select&gt;</span></code></pre>
+
+        <div id="ch9-validation"></div>
+        <h3>9.4 HTML5 Form Validation Attributes</h3>
+        <p>
+          HTML5 provides built-in client-side validation. The browser enforces
+          these rules before submitting the form —
+          <em>unless JavaScript or proxy tools bypass the browser entirely</em>.
+        </p>
+
+        <pre data-lang="html"><code><span class="tag">&lt;input</span>
+  <span class="atr">type</span>=<span class="val">"text"</span>
+  <span class="atr">name</span>=<span class="val">"username"</span>
+  <span class="atr">required</span>                      <span class="cmt">&lt;!-- cannot be empty --&gt;</span>
+  <span class="atr">minlength</span>=<span class="val">"3"</span>                 <span class="cmt">&lt;!-- minimum characters --&gt;</span>
+  <span class="atr">maxlength</span>=<span class="val">"30"</span>                <span class="cmt">&lt;!-- maximum characters --&gt;</span>
+  <span class="atr">pattern</span>=<span class="val">"[a-zA-Z0-9_]+"</span>      <span class="cmt">&lt;!-- must match regex --&gt;</span>
+  <span class="atr">placeholder</span>=<span class="val">"letters and numbers only"</span>
+<span class="tag">/&gt;</span>
+
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"number"</span> <span class="atr">min</span>=<span class="val">"1"</span> <span class="atr">max</span>=<span class="val">"1000"</span> <span class="atr">step</span>=<span class="val">"1"</span><span class="tag">/&gt;</span></code></pre>
+
+        <div class="callout important">
+          <div style="font-size: 20px">🔑</div>
+          <div class="callout-content">
+            <strong
+              >Client-side validation is a UX feature, not a security
+              control</strong
+            >
+            <p>
+              This is one of the most important things to understand before you
+              start web pentesting. <code>required</code>,
+              <code>maxlength</code>, <code>min</code>, <code>max</code>, and
+              <code>pattern</code> all exist only in the browser. Any value sent
+              via Burp Suite, curl, or a custom script completely bypasses them.
+              The server must <em>always</em> validate all input independently. A
+              server that trusts client-side validation is fundamentally broken.
+            </p>
+          </div>
+        </div>
+
+        <div id="ch9-hidden"></div>
+        <h3>9.5 Hidden Input Fields</h3>
+        <p>
+          Hidden inputs are part of the form but completely invisible to the
+          user. They are submitted along with the form data and are commonly
+          used to pass values the server set earlier (IDs, tokens, state).
+        </p>
+
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;form</span> <span class="atr">method</span>=<span class="val">"POST"</span> <span class="atr">action</span>=<span class="val">"/order/confirm"</span><span class="tag">&gt;</span>
+
+  <span class="cmt">&lt;!-- Hidden fields — invisible but fully submitted with the form --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"hidden"</span> <span class="atr">name</span>=<span class="val">"order_id"</span>    <span class="atr">value</span>=<span class="val">"7842"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"hidden"</span> <span class="atr">name</span>=<span class="val">"price"</span>       <span class="atr">value</span>=<span class="val">"129.99"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"hidden"</span> <span class="atr">name</span>=<span class="val">"user_role"</span>   <span class="atr">value</span>=<span class="val">"customer"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"hidden"</span> <span class="atr">name</span>=<span class="val">"csrf_token"</span>  <span class="atr">value</span>=<span class="val">"f83hd92k..."</span><span class="tag">/&gt;</span>
+
+  <span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Confirm Order<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></code></pre>
+
+        <div class="callout remember">
+          <div style="font-size: 20px">🧠</div>
+          <div class="callout-content">
+            <strong>Hidden ≠ Secret</strong>
+            <p>
+              A hidden input field is hidden only from the visual display.
+              Anyone who looks at the page source, opens DevTools, or intercepts
+              the request with a proxy tool can see every hidden field and
+              change its value. The word "hidden" is purely a presentation term.
+              Never confuse it with secrecy or protection.
+            </p>
+          </div>
+        </div>
+
+        <h3>9.6 Form Labels and Accessibility</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Method 1: for attribute matches input id --&gt;</span>
+<span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="val">"email"</span><span class="tag">&gt;</span>Email Address:<span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"email"</span> <span class="atr">id</span>=<span class="val">"email"</span> <span class="atr">name</span>=<span class="val">"email"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- Method 2: label wraps the input --&gt;</span>
+<span class="tag">&lt;label&gt;</span>
+  Email Address:
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"email"</span> <span class="atr">name</span>=<span class="val">"email"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/label&gt;</span></code></pre>
+
+        <h3>9.7 Complete Login Form Example</h3>
+        <pre data-lang="html"><code><span class="tag">&lt;form</span>
+  <span class="atr">action</span>=<span class="val">"/auth/login"</span>
+  <span class="atr">method</span>=<span class="val">"POST"</span>
+  <span class="atr">id</span>=<span class="val">"login-form"</span>
+  <span class="atr">autocomplete</span>=<span class="val">"off"</span>
+<span class="tag">&gt;</span>
+  <span class="cmt">&lt;!-- Anti-CSRF token — must match the session value on the server --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"hidden"</span> <span class="atr">name</span>=<span class="val">"_csrf"</span> <span class="atr">value</span>=<span class="val">"Xy9mN2pQ..."</span><span class="tag">/&gt;</span>
+
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"field"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="val">"username"</span><span class="tag">&gt;</span>Username<span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span>
+      <span class="atr">type</span>=<span class="val">"text"</span>
+      <span class="atr">id</span>=<span class="val">"username"</span>
+      <span class="atr">name</span>=<span class="val">"username"</span>
+      <span class="atr">required</span>
+      <span class="atr">autofocus</span>
+      <span class="atr">maxlength</span>=<span class="val">"50"</span>
+    <span class="tag">/&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"field"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="val">"password"</span><span class="tag">&gt;</span>Password<span class="tag">&lt;/label&gt;</span>
+    <span class="tag">&lt;input</span>
+      <span class="atr">type</span>=<span class="val">"password"</span>
+      <span class="atr">id</span>=<span class="val">"password"</span>
+      <span class="atr">name</span>=<span class="val">"password"</span>
+      <span class="atr">required</span>
+      <span class="atr">minlength</span>=<span class="val">"8"</span>
+    <span class="tag">/&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"field"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"checkbox"</span> <span class="atr">id</span>=<span class="val">"remember"</span> <span class="atr">name</span>=<span class="val">"remember"</span> <span class="atr">value</span>=<span class="val">"1"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;label</span> <span class="atr">for</span>=<span class="val">"remember"</span><span class="tag">&gt;</span>Remember me<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+
+  <span class="tag">&lt;button</span> <span class="atr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Sign In<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></code></pre>
+
+        <div class="callout exercise">
+          <div style="font-size: 20px">🛠️</div>
+          <div class="callout-content">
+            <strong>Exercise 9.1 — Build a Registration Form</strong>
+            <p>
+              Build an HTML registration form with: username (text, required,
+              maxlength=20), email (email, required), password (password,
+              minlength=8), confirm password (password), birth date (date),
+              country (select with 5 options), gender (radio:
+              male/female/other), terms checkbox (required), and a submit
+              button. Include a proper label for every field. Open it in your
+              browser and submit it — observe what appears in the address bar
+              when using GET vs POST.
+            </p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ══════════ CHAPTER 10 ══════════ -->
+      <section id="ch10" class="chapter">
+        <div class="ch-tag">Chapter 10</div>
+        <h2 class="ch-title">The Document Object Model (DOM)</h2>
+        <p class="ch-intro">
+          The DOM is the browser's internal, living representation of the HTML
+          page. It's a tree of objects that JavaScript can read and modify in
+          real time. Understanding the DOM is essential for understanding how
+          dynamic web applications behave.
+        </p>
+
+        <h3>10.1 HTML → DOM Tree</h3>
+        <p>
+          When a browser parses HTML, it builds a tree of nodes. Each HTML
+          element becomes a node; attributes become properties of nodes; text
+          content becomes text nodes.
+        </p>
+
+        <div class="diagram">
+          <div class="d-title">DOM Tree for a Simple Page</div>
+          <pre
+            style="
+              background: none;
+              border: none;
+              padding: 0;
+              margin: 0;
+              font-size: 12.5px;
+              color: var(--ink);
+              line-height: 1.9;
+            "
+          >
+  Document
+  └── html
+      ├── head
+      │   ├── title
+      │   │   └── #text "My Page"
+      │   └── meta (charset="UTF-8")
+      └── body
+          ├── h1
+          │   └── #text "Welcome"
+          ├── p  (id="intro")
+          │   └── #text "Hello World"
+          └── form (action="/login" method="POST")
+              ├── input (type="hidden" name="csrf")
+              ├── input (type="text" name="username")
+              └── button (type="submit")
+                  └── #text "Login"</pre
+          >
+        </div>
+
+        <h3>10.2 DOM vs HTML Source</h3>
+        <p>
+          The DOM is <em>not</em> the same as the raw HTML source. Browsers
+          modify the DOM in several important ways:
+        </p>
+
+        <ul>
+          <li>
+            Missing tags (<code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>,
+            <code>&lt;body&gt;</code>) are added automatically
+          </li>
+          <li>Invalid nesting is silently corrected</li>
+          <li>JavaScript can add, remove, or modify nodes at any time</li>
+          <li>
+            The DOM reflects the <em>current state</em> of the page — after all
+            scripts have run
+          </li>
+        </ul>
+
+        <div class="callout exercise">
+          <div style="font-size: 20px">🛠️</div>
+          <div class="callout-content">
+            <strong>Exercise 10.1 — View Source vs DOM</strong>
+            <p>
+              Open any modern website. Press <code>Ctrl+U</code> to view the
+              original HTML source. Then press <code>F12</code>, go to the
+              Elements tab, and look at the DOM. Notice the differences. In
+              particular, look for content that exists in the DOM but not in the
+              source — this is content added by JavaScript after page load. This
+              difference is critical for understanding how dynamic web apps
+              work.
+            </p>
+          </div>
+        </div>
+
+        <h3>10.3 DOM Node Types</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Node Type</th>
+              <th>Example</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Element Node</td>
+              <td>
+                <code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>,
+                <code>&lt;a&gt;</code>
+              </td>
+              <td>HTML elements — most common</td>
+            </tr>
+            <tr>
+              <td>Text Node</td>
+              <td><code>"Hello World"</code></td>
+              <td>Text content inside elements</td>
+            </tr>
+            <tr>
+              <td>Attribute</td>
+              <td><code>id="header"</code></td>
+              <td>A property of an element node</td>
+            </tr>
+            <tr>
+              <td>Comment Node</td>
+              <td><code>&lt;!-- comment --&gt;</code></td>
+              <td>HTML comments — visible in the DOM!</td>
+            </tr>
+            <tr>
+              <td>Document Node</td>
+              <td><code>document</code></td>
+              <td>Root of the entire DOM</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>10.4 JavaScript and the DOM</h3>
+        <p>
+          JavaScript interacts with the DOM through the global
+          <code>document</code> object. This is how web pages become dynamic:
+        </p>
+
+        <pre
+          data-lang="javascript"
+        ><code><span class="cmt">// Selecting elements</span>
+<span class="var">document</span>.<span class="fn">getElementById</span>(<span class="str">'header'</span>)         <span class="cmt">// by id</span>
+<span class="var">document</span>.<span class="fn">getElementsByClassName</span>(<span class="str">'nav-item'</span>) <span class="cmt">// by class (live HTMLCollection)</span>
+<span class="var">document</span>.<span class="fn">getElementsByTagName</span>(<span class="str">'input'</span>)     <span class="cmt">// by tag (live HTMLCollection)</span>
+<span class="var">document</span>.<span class="fn">querySelector</span>(<span class="str">'#login form'</span>)      <span class="cmt">// CSS selector — first match</span>
+<span class="var">document</span>.<span class="fn">querySelectorAll</span>(<span class="str">'input[required]'</span>) <span class="cmt">// CSS selector — all matches (NodeList)</span>
+
+<span class="cmt">// Reading content</span>
+<span class="var">element</span>.<span class="var">textContent</span>    <span class="cmt">// text only (safe)</span>
+<span class="var">element</span>.<span class="var">innerHTML</span>      <span class="cmt">// HTML markup as a string</span>
+<span class="var">element</span>.<span class="var">value</span>          <span class="cmt">// value of input/textarea/select</span>
+<span class="var">element</span>.<span class="fn">getAttribute</span>(<span class="str">'href'</span>)  <span class="cmt">// attribute value</span>
+
+<span class="cmt">// Modifying content</span>
+<span class="var">element</span>.<span class="var">textContent</span> = <span class="str">'New text'</span>;
+<span class="var">element</span>.<span class="var">innerHTML</span>   = <span class="str">'&lt;b&gt;Bold text&lt;/b&gt;'</span>;
+<span class="var">element</span>.<span class="fn">setAttribute</span>(<span class="str">'class'</span>, <span class="str">'active'</span>);
+<span class="var">element</span>.<span class="var">style</span>.<span class="var">color</span> = <span class="str">'red'</span>;
+
+<span class="cmt">// Page-level information</span>
+<span class="var">window</span>.<span class="var">location</span>.<span class="var">href</span>     <span class="cmt">// full URL</span>
+<span class="var">window</span>.<span class="var">location</span>.<span class="var">hostname</span> <span class="cmt">// domain only</span>
+<span class="var">window</span>.<span class="var">location</span>.<span class="var">search</span>   <span class="cmt">// query string (?key=value)</span>
+<span class="var">window</span>.<span class="var">location</span>.<span class="var">hash</span>     <span class="cmt">// fragment (#section)</span>
+<span class="var">document</span>.<span class="var">cookie</span>           <span class="cmt">// non-HttpOnly cookies</span>
+<span class="var">document</span>.<span class="var">referrer</span>         <span class="cmt">// previous page URL</span></code></pre>
+
+        <div class="callout remember">
+          <div style="font-size: 20px">🧠</div>
+          <div class="callout-content">
+            <strong>textContent vs innerHTML</strong>
+            <p>
+              <code>textContent</code> treats whatever you give it as plain
+              text. <code>innerHTML</code> parses the string as HTML and builds
+              real elements from it. That difference is the seed of an entire
+              class of vulnerabilities you'll study later — for now, just
+              remember that writing untrusted data with <code>innerHTML</code>
+              is risky, while <code>textContent</code> is safe.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 11 ══════════ -->
+      <section id="ch11" class="chapter">
+        <div class="ch-tag">Chapter 11</div>
+        <h2 class="ch-title">HTML &amp; CSS — How Pages Are Styled</h2>
+        <p class="ch-intro">
+          CSS (Cascading Style Sheets) controls the visual presentation of HTML
+          elements. Understanding how styling works helps you read source code
+          and understand how pages are structured.
+        </p>
+
+        <h3>11.1 Three Ways to Apply CSS</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- 1. Inline CSS — directly on the element -----------&gt;</span>
+<span class="tag">&lt;p</span> <span class="atr">style</span>=<span class="val">"color: red; font-size: 18px; display: none;"</span><span class="tag">&gt;</span>
+  Hidden paragraph
+<span class="tag">&lt;/p&gt;</span>
+
+<span class="cmt">&lt;!-- 2. Internal stylesheet — inside &lt;head&gt; ------------&gt;</span>
+<span class="tag">&lt;style&gt;</span>
+  .admin-panel { display: none; }
+  #secret-link { visibility: hidden; }
+<span class="tag">&lt;/style&gt;</span>
+
+<span class="cmt">&lt;!-- 3. External stylesheet — separate file -------------&gt;</span>
+<span class="tag">&lt;link</span> <span class="atr">rel</span>=<span class="val">"stylesheet"</span> <span class="atr">href</span>=<span class="val">"/css/style.css"</span><span class="tag">/&gt;</span></code></pre>
+
+        <h3>11.2 Hiding Elements with CSS</h3>
+        <p>
+          As a pentester, you'll encounter elements that are visually hidden but
+          still present in the HTML — and sometimes still active. There are
+          several ways developers hide elements:
+        </p>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>CSS Property</th>
+              <th>Value</th>
+              <th>Visible?</th>
+              <th>In DOM?</th>
+              <th>Clickable?</th>
+            </tr>
+            <tr>
+              <td><code>display</code></td>
+              <td><code>none</code></td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><code>visibility</code></td>
+              <td><code>hidden</code></td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><code>opacity</code></td>
+              <td><code>0</code></td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>Yes!</td>
+            </tr>
+            <tr>
+              <td><code>position+offset</code></td>
+              <td><code>position:absolute; left:-9999px</code></td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><code>width/height</code></td>
+              <td><code>0</code></td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>Maybe</td>
+            </tr>
+            <tr>
+              <td><code>color</code></td>
+              <td>same as background</td>
+              <td>Seemingly No</td>
+              <td>Yes</td>
+              <td>N/A</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="callout note">
+          <div style="font-size: 20px">💡</div>
+          <div class="callout-content">
+            <strong>Visually hidden ≠ functionally hidden</strong>
+            <p>
+              Elements hidden with CSS still exist in the DOM, may still be
+              submitted in forms, may still handle events, and can be revealed
+              with DevTools. When reading page source, always look for hidden
+              elements — they often contain sensitive data, alternative
+              navigation links, admin features, or debug information. Note the
+              <code>opacity: 0</code> row above: such elements are invisible but
+              <em>still clickable</em>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 12 ══════════ -->
+      <section id="ch12" class="chapter">
+        <div class="ch-tag">Chapter 12</div>
+        <h2 class="ch-title">HTML &amp; JavaScript — How Pages Come Alive</h2>
+        <p class="ch-intro">
+          JavaScript is the programming language of the web. It runs in the
+          browser and interacts directly with the DOM. Understanding how HTML
+          and JavaScript work together is foundational for web pentesting.
+        </p>
+
+        <h3>12.1 Including JavaScript</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Inline JavaScript --------------------------------&gt;</span>
+<span class="tag">&lt;script&gt;</span>
+  console.log('Hello from inline JS');
+  const name = 'Alice';
+<span class="tag">&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- External JavaScript file -------------------------&gt;</span>
+<span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"/js/app.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- async: downloads in parallel; runs as soon as it is ready (can interrupt parsing) --&gt;</span>
+<span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"/js/tracker.js"</span> <span class="atr">async</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- defer: downloads in parallel; runs after the HTML is fully parsed --&gt;</span>
+<span class="tag">&lt;script</span> <span class="atr">src</span>=<span class="val">"/js/app.js"</span> <span class="atr">defer</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- type="module": an ES module (deferred by default) --&gt;</span>
+<span class="tag">&lt;script</span> <span class="atr">type</span>=<span class="val">"module"</span> <span class="atr">src</span>=<span class="val">"/js/main.mjs"</span><span class="tag">&gt;&lt;/script&gt;</span></code></pre>
+
+        <h3>12.2 JavaScript Reading User Input</h3>
+        <p>
+          A critical pattern to understand: JavaScript often reads data from the
+          URL or from form inputs, processes it, and writes it back to the page.
+          Understanding this flow is the foundation for understanding how data
+          moves through a web application.
+        </p>
+
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+  <span class="tag">&lt;h2&gt;</span>Welcome<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p</span> <span class="atr">id</span>=<span class="val">"greeting"</span><span class="tag">&gt;&lt;/p&gt;</span>
+
+  <span class="tag">&lt;script&gt;</span>
+    <span class="cmt">// 1. READ: get ?name= from the URL</span>
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name');   <span class="cmt">// e.g. URL: /page?name=Alice</span>
+
+    <span class="cmt">// 2. PROCESS: build a greeting string</span>
+    const message = 'Hello, ' + name + '!';
+
+    <span class="cmt">// 3. WRITE: put it into the DOM</span>
+    document.getElementById('greeting').textContent = message;
+    <span class="cmt">// textContent = safe (plain text only)</span>
+    <span class="cmt">// innerHTML   = UNSAFE if name comes from user input</span>
+  <span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code></pre>
+
+        <h3>12.3 Cookies and JavaScript</h3>
+        <p>
+          Cookies are small pieces of data stored by the browser and
+          automatically sent with every HTTP request to the matching domain.
+          They are fundamental to how web sessions work.
+        </p>
+
+        <pre
+          data-lang="javascript"
+        ><code><span class="cmt">// Reading cookies from JavaScript</span>
+<span class="var">document</span>.<span class="var">cookie</span>;
+<span class="cmt">// Returns: "session=abc123; theme=dark; username=alice"</span>
+
+<span class="cmt">// Setting a cookie from JavaScript</span>
+<span class="var">document</span>.<span class="var">cookie</span> = <span class="str">"username=bob; path=/; expires=Fri, 31 Dec 2027 23:59:59 GMT"</span>;
+
+<span class="cmt">// Cookies with the HttpOnly flag CANNOT be read by JavaScript at all.
+// They still exist and are still sent with requests, but document.cookie
+// will not show them.</span></code></pre>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Cookie Attribute</th>
+              <th>Purpose</th>
+              <th>Security Impact</th>
+            </tr>
+            <tr>
+              <td><code>HttpOnly</code></td>
+              <td>Cookie not accessible via JavaScript</td>
+              <td>Protects the session cookie from JS access</td>
+            </tr>
+            <tr>
+              <td><code>Secure</code></td>
+              <td>Cookie only sent over HTTPS</td>
+              <td>Prevents interception over plain HTTP</td>
+            </tr>
+            <tr>
+              <td><code>SameSite=Strict</code></td>
+              <td>Never sent with cross-site requests</td>
+              <td>Strong CSRF protection</td>
+            </tr>
+            <tr>
+              <td><code>SameSite=Lax</code></td>
+              <td>Sent only with top-level navigation</td>
+              <td>Moderate CSRF protection (modern default)</td>
+            </tr>
+            <tr>
+              <td><code>SameSite=None</code></td>
+              <td>Always sent cross-site (requires Secure)</td>
+              <td>Enables cross-site use cases</td>
+            </tr>
+            <tr>
+              <td><code>Expires</code> / <code>Max-Age</code></td>
+              <td>Sets when the cookie expires</td>
+              <td>Persistent vs session cookie</td>
+            </tr>
+            <tr>
+              <td><code>Path</code></td>
+              <td>URL paths the cookie applies to</td>
+              <td>Scope limitation</td>
+            </tr>
+            <tr>
+              <td><code>Domain</code></td>
+              <td>Domains the cookie applies to</td>
+              <td>Scope — including subdomains</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>12.4 Web Storage APIs</h3>
+        <p>
+          HTML5 introduced two storage mechanisms that JavaScript can use to
+          store data in the browser:
+        </p>
+
+        <pre
+          data-lang="javascript"
+        ><code><span class="cmt">// localStorage — persists until explicitly cleared</span>
+<span class="var">localStorage</span>.<span class="fn">setItem</span>(<span class="str">'authToken'</span>, <span class="str">'eyJhbGc...'</span>);
+<span class="var">localStorage</span>.<span class="fn">getItem</span>(<span class="str">'authToken'</span>);
+<span class="var">localStorage</span>.<span class="fn">removeItem</span>(<span class="str">'authToken'</span>);
+<span class="var">localStorage</span>.<span class="fn">clear</span>();  <span class="cmt">// clears everything</span>
+
+<span class="cmt">// sessionStorage — clears when the tab/window is closed</span>
+<span class="var">sessionStorage</span>.<span class="fn">setItem</span>(<span class="str">'step'</span>, <span class="str">'2'</span>);
+<span class="var">sessionStorage</span>.<span class="fn">getItem</span>(<span class="str">'step'</span>);
+
+<span class="cmt">// Both are readable by any JavaScript on the same origin.
+// Unlike cookies, they CANNOT be marked HttpOnly — always JS-readable.</span></code></pre>
+      </section>
+
+      <!-- ══════════ CHAPTER 13 ══════════ -->
+      <section id="ch13" class="chapter">
+        <div class="ch-tag">Chapter 13</div>
+        <h2 class="ch-title">HTML5 Modern Features</h2>
+        <p class="ch-intro">
+          HTML5 introduced many powerful APIs and elements. Modern web
+          applications rely on these heavily — and you'll encounter them in
+          every target you assess.
+        </p>
+
+        <h3>13.1 New Structural Elements (Recap)</h3>
+        <p>
+          Already covered in Chapter 4 — <code>&lt;header&gt;</code>,
+          <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>,
+          <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>,
+          <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>.
+        </p>
+
+        <h3>13.2 HTML5 APIs and How They Are Reached</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>API / Feature</th>
+              <th>How It Is Reached</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Geolocation</td>
+              <td>JavaScript: <code>navigator.geolocation</code></td>
+              <td>Accesses device location (asks permission)</td>
+            </tr>
+            <tr>
+              <td>Web Workers</td>
+              <td>JavaScript: <code>new Worker('w.js')</code></td>
+              <td>Runs script on a background thread, off the main UI thread</td>
+            </tr>
+            <tr>
+              <td>Canvas</td>
+              <td>HTML <code>&lt;canvas&gt;</code> + JS context</td>
+              <td>Pixel-based 2D/3D drawing surface</td>
+            </tr>
+            <tr>
+              <td>WebSockets</td>
+              <td>JavaScript: <code>new WebSocket(url)</code></td>
+              <td>Persistent, two-way connection</td>
+            </tr>
+            <tr>
+              <td>Server-Sent Events</td>
+              <td>JavaScript: <code>new EventSource(url)</code></td>
+              <td>One-way, real-time updates from the server</td>
+            </tr>
+            <tr>
+              <td>Drag and Drop</td>
+              <td>HTML <code>draggable="true"</code> + JS events</td>
+              <td>Native drag-and-drop support</td>
+            </tr>
+            <tr>
+              <td>File API</td>
+              <td>HTML <code>&lt;input type="file"&gt;</code> + JS</td>
+              <td>Read file contents in the browser</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>13.3 The &lt;template&gt; Element</h3>
+        <p>
+          The <code>&lt;template&gt;</code> tag holds HTML that is not rendered
+          immediately. Its content lives in a separate document fragment and is
+          activated by JavaScript.
+        </p>
+        <pre
+          data-lang="html"
+        ><code><span class="tag">&lt;template</span> <span class="atr">id</span>=<span class="val">"card-template"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="atr">class</span>=<span class="val">"card"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h3</span> <span class="atr">class</span>=<span class="val">"card-title"</span><span class="tag">&gt;&lt;/h3&gt;</span>
+    <span class="tag">&lt;p</span>  <span class="atr">class</span>=<span class="val">"card-body"</span><span class="tag">&gt;&lt;/p&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/template&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+  const tmpl = document.getElementById('card-template').content.cloneNode(true);
+  tmpl.querySelector('.card-title').textContent = 'My Card';
+  document.body.appendChild(tmpl);
+<span class="tag">&lt;/script&gt;</span></code></pre>
+
+        <h3>13.4 HTML5 Form Enhancements</h3>
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- datalist: autocomplete suggestions for a text input --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"text"</span> <span class="atr">name</span>=<span class="val">"city"</span> <span class="atr">list</span>=<span class="val">"cities"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;datalist</span> <span class="atr">id</span>=<span class="val">"cities"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"Cairo"</span><span class="tag">&gt;&lt;/option&gt;</span>
+  <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"Alexandria"</span><span class="tag">&gt;&lt;/option&gt;</span>
+  <span class="tag">&lt;option</span> <span class="atr">value</span>=<span class="val">"Giza"</span><span class="tag">&gt;&lt;/option&gt;</span>
+<span class="tag">&lt;/datalist&gt;</span>
+
+<span class="cmt">&lt;!-- output: a place to show a calculated result --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"number"</span> <span class="atr">id</span>=<span class="val">"a"</span> <span class="atr">value</span>=<span class="val">"10"</span><span class="tag">/&gt;</span> +
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"number"</span> <span class="atr">id</span>=<span class="val">"b"</span> <span class="atr">value</span>=<span class="val">"5"</span><span class="tag">/&gt;</span> =
+<span class="tag">&lt;output</span> <span class="atr">name</span>=<span class="val">"result"</span><span class="tag">&gt;</span>15<span class="tag">&lt;/output&gt;</span>
+
+<span class="cmt">&lt;!-- progress bar --&gt;</span>
+<span class="tag">&lt;progress</span> <span class="atr">value</span>=<span class="val">"75"</span> <span class="atr">max</span>=<span class="val">"100"</span><span class="tag">&gt;</span>75%<span class="tag">&lt;/progress&gt;</span>
+
+<span class="cmt">&lt;!-- meter (gauge) --&gt;</span>
+<span class="tag">&lt;meter</span> <span class="atr">value</span>=<span class="val">"0.7"</span> <span class="atr">min</span>=<span class="val">"0"</span> <span class="atr">max</span>=<span class="val">"1"</span><span class="tag">&gt;</span>70%<span class="tag">&lt;/meter&gt;</span></code></pre>
+      </section>
+
+      <!-- ══════════ CHAPTER 14 ══════════ -->
+      <section id="ch14" class="chapter">
+        <div class="ch-tag">Chapter 14</div>
+        <h2 class="ch-title">Reading HTML Source Code</h2>
+        <p class="ch-intro">
+          Reading and understanding raw HTML source is a core skill for web
+          penetration testers. Before any tool, before any scan — you read the
+          source.
+        </p>
+
+        <h3>14.1 How to View HTML Source</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Method</th>
+              <th>How</th>
+              <th>What You See</th>
+            </tr>
+            <tr>
+              <td>View Source</td>
+              <td><code>Ctrl+U</code> (browser)</td>
+              <td>Raw HTML as received from the server</td>
+            </tr>
+            <tr>
+              <td>DevTools Elements</td>
+              <td><code>F12</code> → Elements tab</td>
+              <td>Live DOM — after JavaScript has run</td>
+            </tr>
+            <tr>
+              <td>curl</td>
+              <td><code>curl -s https://site.com</code></td>
+              <td>Raw HTTP response body</td>
+            </tr>
+            <tr>
+              <td>Burp Suite</td>
+              <td>Proxy → HTTP history</td>
+              <td>Full request and response with headers</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>14.2 What to Look for in Page Source</h3>
+        <p>
+          When you open a page's source for the first time, perform a systematic
+          scan:
+        </p>
+
+        <ol>
+          <li>
+            <strong>&lt;head&gt; section</strong> — charset, meta tags,
+            generator info, external scripts and stylesheets loaded, title
+          </li>
+          <li>
+            <strong>HTML comments</strong> — search for
+            <code>&lt;!--</code> throughout the page
+          </li>
+          <li>
+            <strong>Hidden inputs</strong> — search for
+            <code>type="hidden"</code>
+          </li>
+          <li>
+            <strong>Form elements</strong> — every <code>&lt;form&gt;</code>,
+            its <code>action</code>, <code>method</code>, and all fields
+          </li>
+          <li>
+            <strong>External resources</strong> — <code>src=</code> and
+            <code>href=</code> attributes pointing to APIs, CDNs, internal paths
+          </li>
+          <li>
+            <strong>Data attributes</strong> — <code>data-*</code> attributes on
+            elements
+          </li>
+          <li>
+            <strong>&lt;script&gt; blocks</strong> — inline JavaScript that may
+            reveal logic or endpoints
+          </li>
+          <li>
+            <strong>Disabled/readonly inputs</strong> — elements with
+            <code>disabled</code> or <code>readonly</code> attributes
+          </li>
+          <li>
+            <strong>Class and ID names</strong> — names like
+            <code>admin-panel</code>, <code>debug-info</code>,
+            <code>role-check</code>
+          </li>
+        </ol>
+
+        <pre
+          data-lang="html"
+        ><code><span class="cmt">&lt;!-- Things to find when reading source ---------------------&gt;</span>
+
+<span class="cmt">&lt;!-- 1. COMMENTS often leak info --&gt;</span>
+<span class="cmt">&lt;!-- TODO: remove before go-live. Admin bypass: /dev/admin?token=abc --&gt;</span>
+
+<span class="cmt">&lt;!-- 2. HIDDEN INPUTS carry data the server set --&gt;</span>
+<span class="tag">&lt;input</span> <span class="atr">type</span>=<span class="val">"hidden"</span> <span class="atr">name</span>=<span class="val">"is_admin"</span> <span class="atr">value</span>=<span class="val">"false"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- 3. data-* can leak application state --&gt;</span>
+<span class="tag">&lt;div</span> <span class="atr">id</span>=<span class="val">"app"</span> <span class="atr">data-version</span>=<span class="val">"3.1.2"</span> <span class="atr">data-env</span>=<span class="val">"production"</span><span class="tag">&gt;&lt;/div&gt;</span>
+
+<span class="cmt">&lt;!-- 4. Hidden navigation links --&gt;</span>
+<span class="tag">&lt;a</span> <span class="atr">href</span>=<span class="val">"/admin/dashboard"</span> <span class="atr">style</span>=<span class="val">"display:none"</span><span class="tag">&gt;</span>Admin<span class="tag">&lt;/a&gt;</span>
+
+<span class="cmt">&lt;!-- 5. Hardcoded API URLs / keys in scripts --&gt;</span>
+<span class="tag">&lt;script&gt;</span>
+  const API_BASE = 'https://api.internal.company.com/v2';
+  const MAP_KEY  = 'AIzaSyD-XXXXXXXXX';
+<span class="tag">&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- 6. Interesting meta generators --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="atr">name</span>=<span class="val">"generator"</span> <span class="atr">content</span>=<span class="val">"Drupal 9.5.1 (https://www.drupal.org)"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- 7. Framework signatures in the body class --&gt;</span>
+<span class="tag">&lt;body</span> <span class="atr">class</span>=<span class="val">"logged-in role-administrator page-node-1 node-type-page"</span><span class="tag">&gt;</span></code></pre>
+
+        <div class="callout exercise">
+          <div style="font-size: 20px">🛠️</div>
+          <div class="callout-content">
+            <strong>Exercise 14.1 — Source Analysis on a Live Site</strong>
+            <p>
+              Choose any public website. Open its source (<code>Ctrl+U</code>).
+              Spend 15 minutes and write down: (1) What technology/framework is
+              it built on? (2) What external services does it load (analytics,
+              CDN, maps, ads)? (3) Are there any HTML comments? (4) Are there
+              hidden form fields? (5) What are all the form actions? (6) What
+              API endpoints can you find in inline scripts?
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ CHAPTER 15 ══════════ -->
+      <section id="ch15" class="chapter">
+        <div class="ch-tag">Chapter 15</div>
+        <h2 class="ch-title">Using Browser DevTools</h2>
+        <p class="ch-intro">
+          Browser Developer Tools are built into every modern browser. For a web
+          pentester, DevTools is the primary day-to-day workspace. Learn every
+          panel.
+        </p>
+
+        <h3>15.1 Opening DevTools</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Method</th>
+              <th>How</th>
+            </tr>
+            <tr>
+              <td>Keyboard shortcut</td>
+              <td><code>F12</code> or <code>Ctrl+Shift+I</code></td>
+            </tr>
+            <tr>
+              <td>Right-click menu</td>
+              <td>Right-click any element → Inspect</td>
+            </tr>
+            <tr>
+              <td>Menu</td>
+              <td>Browser menu → More Tools → Developer Tools</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>15.2 The Elements Panel</h3>
+        <p>
+          The Elements panel shows the live DOM. It is your primary HTML
+          inspection tool.
+        </p>
+
+        <ul>
+          <li>
+            <strong>Inspect an element:</strong> Right-click any visual element
+            on the page → Inspect → jumps directly to its DOM node
+          </li>
+          <li>
+            <strong>Edit HTML live:</strong> Double-click any node → edit text
+            or attributes — changes apply immediately
+          </li>
+          <li>
+            <strong>Add/remove attributes:</strong> Double-click an attribute
+            value to change it
+          </li>
+          <li>
+            <strong>Reveal hidden elements:</strong> Find elements with
+            <code>display:none</code> or <code>hidden</code> and remove those
+            properties
+          </li>
+          <li>
+            <strong>See computed styles:</strong> The Styles panel shows the
+            final computed CSS applied to the selected element
+          </li>
+          <li>
+            <strong>Event listeners:</strong> The Event Listeners tab shows all
+            JavaScript events attached to the selected element
+          </li>
+        </ul>
+
+        <h3>15.3 The Console Panel</h3>
+        <p>
+          The Console lets you run JavaScript directly against the live page.
+          This is a powerful inspection and manipulation tool.
+        </p>
+
+        <pre
+          data-lang="javascript"
+        ><code><span class="cmt">// Useful Console commands for HTML analysis</span>
+
+<span class="cmt">// Find all hidden inputs and print their name + value</span>
+[...<span class="var">document</span>.<span class="fn">querySelectorAll</span>(<span class="str">'input[type=hidden]'</span>)].<span class="fn">forEach</span>(<span class="var">e</span> =>
+  <span class="var">console</span>.<span class="fn">log</span>(<span class="var">e</span>.<span class="var">name</span>, <span class="var">e</span>.<span class="var">value</span>));
+
+<span class="cmt">// Find all forms and their action URLs</span>
+[...<span class="var">document</span>.<span class="fn">querySelectorAll</span>(<span class="str">'form'</span>)].<span class="fn">forEach</span>(<span class="var">f</span> =>
+  <span class="var">console</span>.<span class="fn">log</span>(<span class="var">f</span>.<span class="var">method</span>, <span class="var">f</span>.<span class="var">action</span>));
+
+<span class="cmt">// Read all (non-HttpOnly) cookies</span>
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">document</span>.<span class="var">cookie</span>);
+
+<span class="cmt">// Read localStorage</span>
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">JSON</span>.<span class="fn">stringify</span>(<span class="var">localStorage</span>));
+
+<span class="cmt">// Get page URL details</span>
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">window</span>.<span class="var">location</span>);
+
+<span class="cmt">// Find all elements that carry a data-user-id attribute</span>
+[...<span class="var">document</span>.<span class="fn">querySelectorAll</span>(<span class="str">'[data-user-id]'</span>)].<span class="fn">forEach</span>(<span class="var">e</span> =>
+  <span class="var">console</span>.<span class="fn">log</span>(<span class="var">e</span>.<span class="var">dataset</span>));
+
+<span class="cmt">// Reveal a hidden input by switching its type to text</span>
+<span class="var">document</span>.<span class="fn">querySelector</span>(<span class="str">'input[name="price"]'</span>).<span class="var">type</span> = <span class="str">'text'</span>;</code></pre>
+
+        <h3>15.4 The Network Panel</h3>
+        <p>
+          The Network panel records every HTTP request the page makes. This is
+          where you see HTML forms in action.
+        </p>
+
+        <ul>
+          <li>
+            <strong>Filter by type:</strong> Use the Doc, XHR/Fetch, JS, CSS
+            tabs to filter request types
+          </li>
+          <li>
+            <strong>Inspect a request:</strong> Click any request row → the
+            Headers tab shows request headers, URL, and method
+          </li>
+          <li>
+            <strong>See the request payload:</strong> The Payload tab shows the
+            POST form data or JSON body that was sent
+          </li>
+          <li>
+            <strong>Response body:</strong> The Response tab shows the server's
+            complete response (HTML/JSON)
+          </li>
+          <li>
+            <strong>Response headers:</strong> The Headers tab → Response
+            Headers shows all server headers (security headers, cookies, etc.)
+          </li>
+          <li>
+            <strong>Replay a request:</strong> Right-click any request → Copy as
+            cURL — paste in a terminal to replay it
+          </li>
+        </ul>
+
+        <h3>15.5 The Application Panel</h3>
+        <p>Inspect browser storage — essential for session analysis:</p>
+
+        <ul>
+          <li>
+            <strong>Cookies:</strong> View all cookies for the domain, including
+            name, value, domain, path, expiry, and the HttpOnly, Secure, and
+            SameSite flags
+          </li>
+          <li>
+            <strong>localStorage / sessionStorage:</strong> View all stored
+            key-value pairs
+          </li>
+          <li>
+            <strong>IndexedDB:</strong> Browser database used by complex
+            applications
+          </li>
+          <li>
+            <strong>Service Workers:</strong> Background scripts that intercept
+            requests (relevant for PWA analysis)
+          </li>
+          <li><strong>Frames:</strong> Shows all iframes and their origins</li>
+        </ul>
+      </section>
+
+      <!-- ══════════ CHAPTER 16 ══════════ -->
+      <section id="ch16" class="chapter">
+        <div class="ch-tag">Chapter 16</div>
+        <h2 class="ch-title">HTML &amp; HTTP Headers</h2>
+        <p class="ch-intro">
+          HTML and HTTP headers are tightly connected. The headers the server
+          sends control how the browser treats the HTML it receives — and they
+          are one of the first things a pentester checks.
+        </p>
+
+        <h3>16.1 How Headers Relate to HTML</h3>
+
+        <pre
+          data-lang="http"
+        ><code><span class="cmt"># HTTP Response — headers arrive BEFORE the HTML body</span>
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Length: 5234
+Content-Security-Policy: default-src 'self'
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=31536000
+Set-Cookie: session=xyz; HttpOnly; Secure; SameSite=Strict
+Referrer-Policy: strict-origin-when-cross-origin
+
+<span class="cmt"># Body (HTML) starts here, after one blank line</span>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;...&lt;/html&gt;</code></pre>
+
+        <h3>16.2 Content-Type and Charset</h3>
+        <p>
+          The <code>Content-Type</code> header tells the browser how to
+          interpret the response body. For HTML pages, it should always be:
+        </p>
+        <pre
+          data-lang="http"
+        ><code>Content-Type: text/html; charset=UTF-8</code></pre>
+        <p>
+          If <code>charset</code> is missing or wrong, the browser may try to
+          guess the encoding — and a mismatch between what the browser assumes
+          and what the server actually sent can change how the page is
+          interpreted. Always note the declared charset.
+        </p>
+
+        <h3>16.3 The Set-Cookie Header</h3>
+        <p>
+          The server creates cookies through the
+          <code>Set-Cookie</code> response header. The browser stores them and
+          sends them back with every subsequent matching request via the
+          <code>Cookie</code> request header.
+        </p>
+
+        <pre data-lang="http"><code><span class="cmt"># Server sends:</span>
+Set-Cookie: sessionId=abc123; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Fri, 31 Dec 2027 23:59:59 GMT
+
+<span class="cmt"># Browser sends back on every matching request:</span>
+Cookie: sessionId=abc123</code></pre>
+
+        <h3>16.4 Key Security Headers to Know</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Header</th>
+              <th>What It Controls</th>
+              <th>Why It Matters to Pentesters</th>
+            </tr>
+            <tr>
+              <td><code>Content-Security-Policy</code></td>
+              <td>Which scripts, styles, and images the browser may load</td>
+              <td>If missing or weak, broader attacks become possible</td>
+            </tr>
+            <tr>
+              <td><code>X-Frame-Options</code></td>
+              <td>Whether the page can be embedded in an iframe</td>
+              <td>If missing, the page may be clickjackable</td>
+            </tr>
+            <tr>
+              <td><code>X-Content-Type-Options: nosniff</code></td>
+              <td>Browser must respect Content-Type, not sniff it</td>
+              <td>Prevents MIME-type confusion attacks</td>
+            </tr>
+            <tr>
+              <td><code>Strict-Transport-Security</code></td>
+              <td>Forces HTTPS for a specified duration</td>
+              <td>If missing, may allow an HTTP downgrade</td>
+            </tr>
+            <tr>
+              <td><code>Referrer-Policy</code></td>
+              <td>How much URL info is shared with linked sites</td>
+              <td>Prevents URL leakage to third parties</td>
+            </tr>
+            <tr>
+              <td><code>Permissions-Policy</code></td>
+              <td>Browser features allowed (camera, geolocation...)</td>
+              <td>Limits browser API exposure</td>
+            </tr>
+            <tr>
+              <td><code>Access-Control-Allow-Origin</code></td>
+              <td>Which cross-origin requests may read the response</td>
+              <td>Misconfiguration enables cross-origin data theft</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="callout exercise">
+          <div style="font-size: 20px">🛠️</div>
+          <div class="callout-content">
+            <strong>Exercise 16.1 — Header Inspection</strong>
+            <p>
+              Open DevTools → Network panel. Load any website. Click on the
+              first document request. In the Headers tab, look at Response
+              Headers. Which security headers are present? Which are missing?
+              For any header that IS present, note its value. This is a core
+              skill you will use in every real-world web pentest.
+            </p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ══════════ APPENDIX ══════════ -->
+      <section id="appendix" class="chapter">
+        <div class="ch-tag">Appendix A</div>
+        <h2 class="ch-title">Quick Reference</h2>
+        <p class="ch-intro">Essential reference cards for your daily work.</p>
+
+        <h3>A.1 HTML Elements Reference</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Category</th>
+              <th>Elements</th>
+            </tr>
+            <tr>
+              <td>Structure</td>
+              <td>
+                <code
+                  >&lt;html&gt; &lt;head&gt; &lt;body&gt; &lt;header&gt;
+                  &lt;main&gt; &lt;footer&gt; &lt;section&gt; &lt;article&gt;
+                  &lt;aside&gt; &lt;nav&gt; &lt;div&gt; &lt;span&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Metadata</td>
+              <td>
+                <code
+                  >&lt;title&gt; &lt;meta&gt; &lt;link&gt; &lt;base&gt;
+                  &lt;style&gt; &lt;script&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Text</td>
+              <td>
+                <code
+                  >&lt;h1&gt;–&lt;h6&gt; &lt;p&gt; &lt;strong&gt; &lt;em&gt;
+                  &lt;code&gt; &lt;pre&gt; &lt;blockquote&gt; &lt;br&gt;
+                  &lt;hr&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Lists</td>
+              <td>
+                <code
+                  >&lt;ul&gt; &lt;ol&gt; &lt;li&gt; &lt;dl&gt; &lt;dt&gt;
+                  &lt;dd&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Links</td>
+              <td><code>&lt;a&gt;</code></td>
+            </tr>
+            <tr>
+              <td>Media</td>
+              <td>
+                <code
+                  >&lt;img&gt; &lt;audio&gt; &lt;video&gt; &lt;source&gt;
+                  &lt;figure&gt; &lt;figcaption&gt; &lt;canvas&gt;
+                  &lt;svg&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Embedded</td>
+              <td><code>&lt;iframe&gt; &lt;object&gt; &lt;embed&gt;</code></td>
+            </tr>
+            <tr>
+              <td>Table</td>
+              <td>
+                <code
+                  >&lt;table&gt; &lt;thead&gt; &lt;tbody&gt; &lt;tfoot&gt;
+                  &lt;tr&gt; &lt;th&gt; &lt;td&gt; &lt;caption&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Form</td>
+              <td>
+                <code
+                  >&lt;form&gt; &lt;input&gt; &lt;textarea&gt; &lt;select&gt;
+                  &lt;option&gt; &lt;optgroup&gt; &lt;button&gt; &lt;label&gt;
+                  &lt;fieldset&gt; &lt;legend&gt; &lt;datalist&gt;
+                  &lt;output&gt;</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Interactive</td>
+              <td>
+                <code
+                  >&lt;details&gt; &lt;summary&gt; &lt;dialog&gt;
+                  &lt;template&gt;</code
+                >
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>A.2 All Input Types</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>type=</th>
+              <th>Purpose</th>
+              <th>Submitted Format</th>
+            </tr>
+            <tr>
+              <td><code>text</code></td>
+              <td>Single-line text</td>
+              <td>Plain string</td>
+            </tr>
+            <tr>
+              <td><code>password</code></td>
+              <td>Masked text</td>
+              <td>Plain string (masked display only)</td>
+            </tr>
+            <tr>
+              <td><code>email</code></td>
+              <td>Email address</td>
+              <td>String (browser validates format)</td>
+            </tr>
+            <tr>
+              <td><code>number</code></td>
+              <td>Numeric value</td>
+              <td>String of digits</td>
+            </tr>
+            <tr>
+              <td><code>range</code></td>
+              <td>Slider</td>
+              <td>String of the numeric value</td>
+            </tr>
+            <tr>
+              <td><code>date</code></td>
+              <td>Date picker</td>
+              <td><code>YYYY-MM-DD</code></td>
+            </tr>
+            <tr>
+              <td><code>time</code></td>
+              <td>Time picker</td>
+              <td><code>HH:MM</code></td>
+            </tr>
+            <tr>
+              <td><code>datetime-local</code></td>
+              <td>Date + time</td>
+              <td><code>YYYY-MM-DDTHH:MM</code></td>
+            </tr>
+            <tr>
+              <td><code>checkbox</code></td>
+              <td>Multi-select toggle</td>
+              <td><code>value</code> if checked; nothing if unchecked</td>
+            </tr>
+            <tr>
+              <td><code>radio</code></td>
+              <td>Single-select from a group</td>
+              <td><code>value</code> of the selected option</td>
+            </tr>
+            <tr>
+              <td><code>file</code></td>
+              <td>File upload</td>
+              <td>Binary file data (requires multipart/form-data)</td>
+            </tr>
+            <tr>
+              <td><code>hidden</code></td>
+              <td>Invisible field</td>
+              <td>Value as set in the HTML</td>
+            </tr>
+            <tr>
+              <td><code>submit</code></td>
+              <td>Submit button</td>
+              <td>Included in form data if it triggered the submit</td>
+            </tr>
+            <tr>
+              <td><code>reset</code></td>
+              <td>Reset all fields</td>
+              <td>Not submitted</td>
+            </tr>
+            <tr>
+              <td><code>button</code></td>
+              <td>Generic button</td>
+              <td>Not submitted unless JS submits the form</td>
+            </tr>
+            <tr>
+              <td><code>url</code></td>
+              <td>URL field</td>
+              <td>String (browser validates format)</td>
+            </tr>
+            <tr>
+              <td><code>tel</code></td>
+              <td>Telephone number</td>
+              <td>String (no format validation)</td>
+            </tr>
+            <tr>
+              <td><code>search</code></td>
+              <td>Search box</td>
+              <td>String</td>
+            </tr>
+            <tr>
+              <td><code>color</code></td>
+              <td>Colour picker</td>
+              <td><code>#rrggbb</code> hex value</td>
+            </tr>
+            <tr>
+              <td><code>image</code></td>
+              <td>Image submit button</td>
+              <td>Submits the x,y coords of the click</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>A.3 Reading Source Code Checklist</h3>
+
+        <div class="quiz">
+          <div class="quiz-title">📋 Source Code Analysis Checklist</div>
+          <ol>
+            <li>
+              What is the <code>charset</code>? What language/encoding is
+              declared?
+            </li>
+            <li>
+              What does the <code>&lt;title&gt;</code> reveal about the
+              application?
+            </li>
+            <li>
+              What CMS/framework does the <code>generator</code> meta tag
+              reveal?
+            </li>
+            <li>
+              What external scripts are loaded? From which CDNs or third
+              parties?
+            </li>
+            <li>Are there any HTML comments? What do they say?</li>
+            <li>
+              How many forms are on the page? What are their
+              <code>action</code> and <code>method</code>?
+            </li>
+            <li>What hidden inputs exist? What are their names and values?</li>
+            <li>
+              What validation attributes are on inputs (<code>required</code>,
+              <code>maxlength</code>, <code>pattern</code>)?
+            </li>
+            <li>
+              Are there elements with <code>display:none</code> or the
+              <code>hidden</code> attribute?
+            </li>
+            <li>What <code>data-*</code> attributes exist on elements?</li>
+            <li>
+              What class names and IDs hint at roles, permissions, or features?
+            </li>
+            <li>
+              Are there inline <code>&lt;script&gt;</code> blocks? What
+              variables or URLs do they contain?
+            </li>
+            <li>Are iframes present? What do they embed, and from where?</li>
+            <li>
+              What links exist? Do any point to admin paths, API endpoints, or
+              internal services?
+            </li>
+            <li>
+              What does the <code>&lt;base&gt;</code> tag say (if present)?
+            </li>
+          </ol>
+        </div>
+
+        <h3>A.4 HTTP Status Code Reference</h3>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Common Cause / Meaning</th>
+            </tr>
+            <tr>
+              <td>200</td>
+              <td>OK</td>
+              <td>Request succeeded</td>
+            </tr>
+            <tr>
+              <td>201</td>
+              <td>Created</td>
+              <td>Resource created successfully (POST/PUT)</td>
+            </tr>
+            <tr>
+              <td>204</td>
+              <td>No Content</td>
+              <td>Success but no body (often DELETE)</td>
+            </tr>
+            <tr>
+              <td>301</td>
+              <td>Moved Permanently</td>
+              <td>Redirect — update your URL</td>
+            </tr>
+            <tr>
+              <td>302</td>
+              <td>Found</td>
+              <td>Temporary redirect (e.g. login → dashboard)</td>
+            </tr>
+            <tr>
+              <td>304</td>
+              <td>Not Modified</td>
+              <td>Browser cache is still valid</td>
+            </tr>
+            <tr>
+              <td>400</td>
+              <td>Bad Request</td>
+              <td>Malformed request, missing parameter</td>
+            </tr>
+            <tr>
+              <td>401</td>
+              <td>Unauthorized</td>
+              <td>Authentication required / failed</td>
+            </tr>
+            <tr>
+              <td>403</td>
+              <td>Forbidden</td>
+              <td>Authenticated but no permission</td>
+            </tr>
+            <tr>
+              <td>404</td>
+              <td>Not Found</td>
+              <td>Resource does not exist</td>
+            </tr>
+            <tr>
+              <td>405</td>
+              <td>Method Not Allowed</td>
+              <td>Wrong HTTP method used</td>
+            </tr>
+            <tr>
+              <td>429</td>
+              <td>Too Many Requests</td>
+              <td>Rate limited</td>
+            </tr>
+            <tr>
+              <td>500</td>
+              <td>Internal Server Error</td>
+              <td>Server-side crash — often reveals framework/stack</td>
+            </tr>
+            <tr>
+              <td>502</td>
+              <td>Bad Gateway</td>
+              <td>Proxy or load balancer issue</td>
+            </tr>
+            <tr>
+              <td>503</td>
+              <td>Service Unavailable</td>
+              <td>Server overloaded or in maintenance</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>A.5 Key Concepts Summary</h3>
+
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Concept</th>
+              <th>Key Takeaway</th>
+            </tr>
+            <tr>
+              <td>HTML Structure</td>
+              <td>
+                Every page is DOCTYPE → html → head + body. The head is
+                metadata; the body is visible content.
+              </td>
+            </tr>
+            <tr>
+              <td>Parsing</td>
+              <td>
+                Browsers are forgiving parsers — they silently correct errors.
+                The DOM may differ from the raw source.
+              </td>
+            </tr>
+            <tr>
+              <td>Forms</td>
+              <td>
+                GET sends data in the URL; POST sends it in the body. Both are
+                interceptable and modifiable.
+              </td>
+            </tr>
+            <tr>
+              <td>Client-side validation</td>
+              <td>
+                A UX feature only — never a security control. Easily bypassed.
+              </td>
+            </tr>
+            <tr>
+              <td>Hidden inputs</td>
+              <td>
+                Invisible but fully submitted. Not secret. Can be modified.
+              </td>
+            </tr>
+            <tr>
+              <td>Cookies</td>
+              <td>
+                Sent automatically with requests. HttpOnly blocks JS access.
+                SameSite limits cross-site sending.
+              </td>
+            </tr>
+            <tr>
+              <td>DOM vs Source</td>
+              <td>
+                DOM = live state after JS ran. Source = original HTML as
+                received.
+              </td>
+            </tr>
+            <tr>
+              <td>Event attributes</td>
+              <td>on* attributes connect HTML to JavaScript execution.</td>
+            </tr>
+            <tr>
+              <td>data-* attributes</td>
+              <td>
+                Custom data stored in HTML elements — often leaks app state.
+              </td>
+            </tr>
+            <tr>
+              <td>HTTP Headers</td>
+              <td>
+                Arrive before the HTML. Control security behaviour: CSP,
+                X-Frame-Options, cookies.
+              </td>
+            </tr>
+            <tr>
+              <td>iframes</td>
+              <td>
+                Create isolated sub-contexts. The sandbox attribute restricts
+                capabilities.
+              </td>
+            </tr>
+            <tr>
+              <td>Fragment (#)</td>
+              <td>
+                Never sent to the server. Lives only in the browser. Used by
+                DOM-driven pages.
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="next-steps"></div>
+        <h3>A.6 Where to Go Next</h3>
+        <p>
+          You now have the HTML foundation. The natural next step is to study how
+          these building blocks are <em>abused</em> — and, just as importantly,
+          how to do that legally and ethically.
+        </p>
+
+        <div class="callout important">
+          <div style="font-size: 20px">⚖️</div>
+          <div class="callout-content">
+            <strong>Golden rule: only test what you are allowed to test</strong>
+            <p>
+              Never run security tests against a system you do not own or do not
+              have explicit, written permission to test. Use the deliberately
+              vulnerable practice targets below. Unauthorised testing is illegal
+              in most countries, regardless of intent.
+            </p>
+          </div>
+        </div>
+
+        <h4>Your Learning Path From Here</h4>
+        <ol>
+          <li>
+            <strong>Go deeper on HTTP</strong> — requests, responses,
+            authentication, sessions, and redirects. HTML rides on HTTP, so a
+            tester must know both.
+          </li>
+          <li>
+            <strong>Learn the core web vulnerability classes</strong> — now that
+            you understand the building blocks, study how they break: Cross-Site
+            Scripting (XSS), SQL Injection, Cross-Site Request Forgery (CSRF),
+            broken access control / IDOR, authentication flaws, SSRF, file-upload
+            issues, and clickjacking.
+          </li>
+          <li>
+            <strong>Get hands-on with the standard tools</strong> — an
+            intercepting proxy (<em>Burp Suite</em> or <em>OWASP ZAP</em>),
+            plus the browser DevTools you learned in Chapter 15.
+          </li>
+          <li>
+            <strong>Practise on legal, intentionally vulnerable targets</strong>
+            — see the list below.
+          </li>
+        </ol>
+
+        <h4>Free, Legal Places to Practise</h4>
+        <div class="tbl-wrap">
+          <table>
+            <tr>
+              <th>Resource</th>
+              <th>What It Is</th>
+            </tr>
+            <tr>
+              <td>PortSwigger Web Security Academy</td>
+              <td>Free, browser-based labs with guided solutions</td>
+            </tr>
+            <tr>
+              <td>OWASP Juice Shop</td>
+              <td>Modern deliberately insecure app you run locally</td>
+            </tr>
+            <tr>
+              <td>DVWA / OWASP WebGoat</td>
+              <td>Classic teaching apps with adjustable difficulty</td>
+            </tr>
+            <tr>
+              <td>TryHackMe / Hack The Box</td>
+              <td>Managed, legal practice ranges</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>Reference Material to Keep Bookmarked</h4>
+        <ul>
+          <li>
+            <strong>MDN Web Docs</strong> — the practical reference for HTML,
+            the DOM, and browser APIs.
+          </li>
+          <li>
+            <strong>WHATWG HTML Living Standard</strong> — the authoritative
+            specification, including the parsing rules.
+          </li>
+          <li>
+            <strong>OWASP Top 10</strong> and the
+            <strong>OWASP Web Security Testing Guide (WSTG)</strong> — the
+            vocabulary and methodology of the field.
+          </li>
+        </ul>
+
+        <div
+          style="
+            border-top: 2px solid var(--border);
+            margin-top: 56px;
+            padding-top: 40px;
+            text-align: center;
+            color: var(--muted);
+          "
+        >
+          <div
+            style="
+              font-family: &quot;Fraunces&quot;, serif;
+              font-size: 28px;
+              font-weight: 700;
+              color: var(--dark);
+              margin-bottom: 8px;
+            "
+          >
+            The Foundation is Set.
+          </div>
+          <p
+            style="
+              font-size: 15px;
+              max-width: 500px;
+              margin: 0 auto;
+              font-style: italic;
+            "
+          >
+            You now understand HTML as a structure, as a communication medium,
+            and as the first layer of every web application you will ever test.
+            Go build things. Go break things — but only with permission.
+          </p>
+          <div
+            style="
+              margin-top: 28px;
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              font-size: 11px;
+              letter-spacing: 0.12em;
+              color: var(--muted);
+            "
+          >
+            HTML FOUNDATIONS · PREREQUISITES FOR WEB PENTESTING · 2026
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <a id="btt" href="#cover" aria-label="Back to top">↑</a>
+
+    <script>
+      // Progress bar + back-to-top + active TOC highlighting
+      const prog = document.getElementById("prog");
+      const btt = document.getElementById("btt");
+
+      window.addEventListener("scroll", () => {
+        const scrollable = document.body.scrollHeight - window.innerHeight;
+        const pct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+        prog.style.width = pct + "%";
+        btt.classList.toggle("vis", window.scrollY > 500);
+
+        // Active TOC link
+        const sections = document.querySelectorAll("section[id]");
+        let active = null;
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top <= 90) active = s.id;
+        });
+        if (active) {
+          document.querySelectorAll(".toc-link").forEach((l) => {
+            l.classList.toggle(
+              "active",
+              l.getAttribute("href") === "#" + active
+            );
+          });
+        }
+      });
+
+      // Close the mobile sidebar after choosing a link
+      document.querySelectorAll("#sidebar .toc-link").forEach((l) => {
+        l.addEventListener("click", () => {
+          if (window.innerWidth <= 860) {
+            document.getElementById("sidebar").classList.remove("open");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
